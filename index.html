@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link rel="stylesheet" href="src/css/style.css" />
+  </head>
+  <body class="p-cloudy">
+    <!--<header>
+      <button class="menu" type="button">
+        <img
+          src="src/assets/icons/burger-menu.svg"
+          alt="menu"
+          width="28"
+          height="22"
+        />
+      </button>
+    </header>
+    <main>
+      <div class="current">
+        <button class="current--date" type="button">
+          <span class="inner-shadow"> Today</span>
+          <div class="current--date--down-arrow"></div>
+        </button>
+        <div class="current--conditions">
+          <div class="current--conditions--weather"></div>
+          <p class="current--conditions--temp inner-shadow">13°</p>
+        </div>
+        <p class="current--place inner-shadow">
+          <span class="city">Besançon</span> -
+          <span class="country">France</span>
+        </p>
+      </div>
+      <div class="hourly">
+        <div class="hourly--hour">
+          <p class="hourly--hour--time">5H</p>
+          <div class="hourly--hour--weather"></div>
+          <p class="hourly--hour--temp">6°</p>
+        </div>
+        <div class="hourly--hour">
+          <p class="hourly--hour--time">6H</p>
+          <div class="hourly--hour--weather"></div>
+          <p class="hourly--hour--temp">7°</p>
+        </div>
+        <div class="hourly--hour">
+          <p class="hourly--hour--time">7H</p>
+          <div class="hourly--hour--weather"></div>
+          <p class="hourly--hour--temp">7°</p>
+        </div>
+        <div class="hourly--hour">
+          <p class="hourly--hour--time">8H</p>
+          <div class="hourly--hour--weather"></div>
+          <p class="hourly--hour--temp">9°</p>
+        </div>
+        <div class="hourly--hour">
+          <p class="hourly--hour--time">9H</p>
+          <div class="hourly--hour--weather"></div>
+          <p class="hourly--hour--temp">9°</p>
+        </div>
+        <div class="hourly--hour">
+          <p class="hourly--hour--time">10H</p>
+          <div class="hourly--hour--weather"></div>
+          <p class="hourly--hour--temp">11°</p>
+        </div>
+      </div>
+      <div class="city-bio">
+        <p>
+          <span class="city">Besançon</span> -
+          <span class="country">France</span>
+        </p>
+        <p class="city-bio--wiki">
+          Besançon est une commune de l'Est de la France, préfecture du
+          département du Doubs et siège du conseil régional de
+          Bourgogne-Franche-Comté. Située en bordure du massif du Jura à moins
+          d'une soixantaine de kilomètres de la Suisse, elle est entourée de
+          collines et traversée par le Doubs.
+        </p>
+        <button class="city-bio--toggle" type="button">
+          <span class="inner-shadow">Show More</span>
+        </button>
+      </div>
+    </main>-->
+    <div class="main-menu">
+      <div class="main-menu--nav">
+        <button class="main-menu--nav--back" type="button">
+          <img
+            src="src/assets/icons/retours.svg"
+            alt="back button"
+            width="34"
+            height="24.3"
+          />
+        </button>
+        <div class="main-menu--nav--search">
+          <input
+            type="text"
+            name="main-menu--nav--search--input"
+            id="main-menu--nav--search--input"
+            placeholder="search for a city..."
+          />
+          <button
+            type="submit"
+            class="main-menu--nav--search--submit"
+            id="main-menu--nav--search--submit"
+          >
+            <img
+              src="src/assets/icons/search-icon.svg"
+              alt="search icon"
+              width="20"
+              height="20"
+            />
+          </button>
+        </div>
+        <button class="main-menu--nav--settings" type="button">
+          <img
+            src="src/assets/icons/slider.svg"
+            alt="settings weather"
+            width="34"
+            height="31"
+          />
+        </button>
+      </div>
+      <div class="main-menu--default-list" id="main-menu--most-searched">
+        <h2>
+          <img
+            src="src/assets/icons/coeur.svg"
+            alt="heart"
+            width="22"
+            height="22"
+          />
+          Most Searched
+        </h2>
+        <div><p>Besançon</p><p>13°</p></div>
+        <div><p>Paris</p><p>14°</p></div>
+        <div><p>Lyon</p><p>13°</p></div>
+        <div><p>Marseille</p><p>17°</p></div>
+        <div><p>Montceau-les-Mines</p><p>12°</p></div>
+      </div>
+      <div class="main-menu--default-list" id="main-menu--suggestions">
+        <h2>
+          <img
+            src="src/assets/icons/etoile.svg"
+            alt="star"
+            width="22"
+            height="22"
+          />Suggestions
+        </h2>
+        <div><p>Vesoul</p><p>12°</p></div>
+        <div><p>Dole</p><p>14°</p></div>
+        <div><p>Pontarlier</p><p>10°</p></div>
+        <div><p>Lure</p><p>12°</p></div>
+        <div><p>Montbéliard</p><p>12°</p></div>
+      </div>
+    </div>
+  </body>
+
+  <template id="date-menu">
+    <div class="current--date-menu">
+      <p class="current--date-menu--day1">Tomorrow</p>
+      <p class="current--date-menu--day2">Wednesday</p>
+      <p class="current--date-menu--day3">Thursday</p>
+      <p class="current--date-menu--day4">Friday</p>
+      <p class="current--date-menu--day5">Saturday</p>
+      <p class="current--date-menu--day6">Sunday</p>
+    </div>
+  </template>
+</html>

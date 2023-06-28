@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 600;
+  src: local("Monserrat"),
+    url("/src/assets/fonts/Montserrat-SemiBold.ttf") format("truetype"),
+    url("/src/assets/fonts/Montserrat-SemiBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 400;
+  src: local("Open Sans"),
+    url("/src/assets/fonts/OpenSans-Regular.ttf") format("truetype"),
+    url("/src/assets/fonts/OpenSans-Regular.woff") format("woff");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 600;
+  src: local("Open Sans"),
+    url("/src/assets/fonts/OpenSans-SemiBold.ttf") format("truetype"),
+    url("/src/assets/fonts/OpenSans-SemiBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 700;
+  src: local("Open Sans"),
+    url("/src/assets/fonts/OpenSans-Bold.ttf") format("truetype"),
+    url("/src/assets/fonts/OpenSans-Bold.woff") format("woff");
+}

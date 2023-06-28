@@ -1,0 +1,322 @@
+@import "colors.css";
+@import "fonts.css";
+
+button {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+}
+body {
+  background-color: rgb(78, 78, 78);
+  background-image: var(--bg-img);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0;
+  margin: 0;
+
+  color: var(--text-color);
+  text-align: center;
+}
+body * {
+  box-sizing: border-box;
+}
+header {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+header .menu {
+  padding: none;
+  margin: 14px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 93.5vh;
+  margin: 0;
+  padding: 0;
+  gap: 9vh;
+}
+
+.current {
+  z-index: 2;
+  margin-top: 5vh;
+  width: 75vw;
+  background-color: var(--bg-color);
+  backdrop-filter: blur(5px);
+  border-radius: 30px;
+  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
+    inset -5px 5px 4px var(--inner-top-right);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+
+  font-family: "Montserrat", sans-serif;
+}
+.current * {
+  padding: 0;
+  margin: 0;
+}
+.current .current--date {
+  font-size: 32px;
+  font-variant: small-caps;
+}
+.current--date .current--date--down-arrow {
+  background-image: url(../assets/icons/Fleche.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  width: 27px;
+  height: 14px;
+  filter: drop-shadow(inset 0 1px 3px var(--text-shadow));
+}
+.current--date-menu {
+  position: fixed;
+  top: 55px;
+
+  width: inherit;
+  background-color: rgba(162, 162, 162, 0.7);
+  border-radius: 30px;
+
+  display: flex;
+  flex-direction: column;
+  padding: 3px 0 3px 0;
+}
+.current--date-menu::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(10px);
+  box-shadow: -3px 3px 4px 0px rgba(255, 255, 255, 0.5) inset,
+    3px -3px 4px 0px rgba(0, 0, 0, 0.5) inset;
+  z-index: -1;
+}
+.current--date-menu p {
+  font-family: "Open Sans", sans-serif;
+  font-size: 32px;
+  padding: 11px;
+}
+.current--date-menu p:hover {
+  border-top: solid 2px rgb(255, 255, 255, 0.8);
+  border-bottom: solid 2px rgb(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 3px 0px var(--inner-top-right) inset,
+    0px 0px 4px 4px var(--text-shadow) inset;
+}
+.current--date-menu .current--date-menu--day1:hover {
+  border-radius: 30px 30px 0 0;
+  border-top: none;
+}
+.current--date-menu .current--date-menu--day6:hover {
+  border-radius: 0 0 30px 30px;
+  border-bottom: none;
+}
+.current .current--conditions {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.current--conditions .current--conditions--weather {
+  width: 104px;
+  height: 88px;
+  background-image: var(--weather-icon);
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(inset 0 1px 3px var(--text-shadow));
+}
+.current--conditions .current--conditions--temp {
+  font-size: 40px;
+}
+.current .current--place {
+  font-size: 24px;
+}
+
+.hourly {
+  z-index: 1;
+  width: 85vw;
+  background-color: var(--bg-color);
+  border-radius: 30px;
+  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
+    inset -5px 5px 4px var(--inner-top-right);
+
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding: 24px 0 24px 20px;
+  overflow: scroll;
+}
+.hourly * {
+  padding: 0;
+  margin: 0;
+}
+.hourly .hourly--hour {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+}
+.hourly--hour .hourly--hour--time {
+  font-size: 20px;
+}
+.hourly--hour .hourly--hour--weather {
+  width: 30px;
+  height: 30px;
+  background-image: var(--weather-icon);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.hourly--hour .hourly--hour--temp {
+  font-size: 16px;
+}
+
+.city-bio {
+  z-index: 3;
+  background-color: var(--city-bio-bg);
+  backdrop-filter: blur(15px);
+  border-radius: 30px 30px 0 0;
+  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
+    inset -5px 5px 4px rgb(255, 255, 255, 0.7);
+  margin-top: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 21px;
+
+  font-family: "Open Sans", sans-serif;
+}
+.city-bio {
+  font-size: 24px;
+  font-weight: 700;
+}
+.city-bio * {
+  padding: 0;
+  margin: 0;
+}
+.city-bio .city-bio--wiki {
+  font-size: 14px;
+  font-weight: 600;
+}
+.city-bio .city-bio--stats {
+  margin: 14px;
+
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+}
+.city-bio .city-bio--toggle {
+  width: fit-content;
+  background-color: var(--button-color);
+  backdrop-filter: blur(20);
+  border-radius: 19px;
+  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
+    inset -5px 5px 4px rgb(255, 255, 255, 0.7);
+  margin: 0;
+  padding: 7px 54px;
+
+  font-family: "Monserrat", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.main-menu {
+  width: 95.3vw;
+  height: 79vh;
+  border-radius: 30px;
+  background: rgba(150, 150, 150, 0.5);
+  box-shadow: -3px 3px 4px 0px rgba(255, 255, 255, 0.5) inset,
+    3px -3px 4px 0px rgba(0, 0, 0, 0.5) inset;
+  margin: 10.5vh auto;
+
+  display: flex;
+  flex-direction: column;
+
+  font-family: "Open Sans", sans-serif;
+}
+.main-menu .main-menu--nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+.main-menu--nav .main-menu--nav--search {
+  width: 54vw;
+  background-color: var(--inner-bottom-left);
+  border-radius: 10px;
+
+  display: flex;
+  padding: 5px;
+  gap: 3px;
+}
+.main-menu--nav--search * {
+  padding: 0;
+}
+.main-menu--nav--search input {
+  outline: none;
+  border: none;
+  background-color: transparent;
+
+  color: var(--text-color);
+  font-size: 14px;
+  text-align: center;
+}
+.main-menu--nav--search input::placeholder {
+  color: rgb(255, 255, 255, 0.8);
+}
+.main-menu .main-menu--default-list {
+  margin-top: 4px;
+}
+.main-menu .main-menu--default-list h2 {
+  background: rgba(150, 150, 150, 0.5);
+  box-shadow: -3px 0px 4px 0px rgba(255, 255, 255, 0.5) inset,
+    3px 0px 4px 0px rgba(0, 0, 0, 0.5) inset;
+  margin: 0;
+
+  display: flex;
+  padding: 8px;
+  gap: 8px;
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+}
+.main-menu .main-menu--default-list img {
+  margin: auto 0;
+}
+.main-menu .main-menu--default-list div {
+  display: flex;
+}
+.main-menu .main-menu--default-list div:hover {
+  box-shadow: 0px 0px 3px 0px var(--inner-top-right) inset,
+    0px 0px 4px 4px var(--text-shadow) inset;
+}
+.main-menu .main-menu--default-list:last-child div:last-child:hover {
+  border-radius: 0 0 24px 24px;
+  padding-bottom: 7px;
+}
+.main-menu .main-menu--default-list p {
+  margin: 8px 20px;
+  padding: 0;
+
+  font-size: 20px;
+}
+.main-menu--default-list div > p:first-child {
+  margin-right: auto;
+}
+.main-menu--default-list div > p:last-child {
+  margin-left: auto;
+}

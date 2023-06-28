@@ -1,0 +1,67 @@
+:root {
+  --text-color: #fff;
+  --text-shadow: rgb(0, 0, 0, 0.1);
+  --inner-bottom-left: rgb(182, 182, 182, 0.5);
+  --city-bio-bg: rgb(51, 53, 50, 0.3);
+}
+
+.rainy {
+  --weather-icon: url(../assets/icons/pluie.svg);
+  --bg-img: url(../assets/images/pluie.jpg);
+  --bg-color: rgb(60, 110, 101, 0.7);
+  --button-color: rgb(60, 110, 101, 0.8);
+  --button-color-hover: #3c6e65;
+  --inner-top-right: #718d87;
+}
+.snow {
+  --weather-icon: url(../assets/icons/flocon.svg);
+  --bg-img: url(../assets/images/neige.jpg);
+  --bg-color: rgb(51, 53, 50, 0.7);
+  --button-color: rgb(51, 53, 50, 0.8);
+  --button-color-hover: #333532;
+  --inner-top-right: #878c8d;
+
+  .menu {
+    filter: invert(83%) ;
+  }
+}
+.p-cloudy {
+  --weather-icon: url(../assets/icons/nuage-soleil.svg);
+  --bg-img: url(../assets/images/nuage-soleil.jpg);
+  --bg-color: rgb(185, 91, 112, 0.7);
+  --button-color: rgb(185, 91, 112, 0.8);
+  --button-color-hover: #b95b70;
+  --inner-top-right: #ddbcc2;
+}
+.sunny {
+  --weather-icon: url(../assets/icons/soleil.svg);
+  --bg-img: url(../assets/images/soleil.jpg);
+  --bg-color: rgb(0, 74, 148, 0.7);
+  --button-color: rgb(0, 74, 148, 0.8);
+  --button-color-hover: #004a94;
+  --inner-top-right: #84b1dd;
+}
+.storm {
+  --weather-icon: url(../assets/icons/orage.svg);
+  --bg-img: url(../assets/images/orage.jpg);
+  --bg-color: rgb(142, 95, 191, 0.7);
+  --button-color: rgb(142, 95, 191, 0.8);
+  --button-color-hover: #8e5fbf;
+  --inner-top-right: #c9b8dc;
+}
+.cloudy {
+  --weather-icon: url(../assets/icons/nuage.svg);
+  --bg-img: url(../assets/images/nuage.jpg);
+  --bg-color: rgb(1, 83, 95, 0.7);
+  --button-color: rgb(1, 83, 95, 0.8);
+  --button-color-hover: #01535f;
+  --inner-top-right: #bdf5f5;
+}
+
+.inner-shadow {
+  color: transparent;
+  background-color: var(--text-color);
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 0px 2px 3px var(--text-shadow);
+}
