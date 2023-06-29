@@ -7,7 +7,7 @@ button {
   color: inherit;
 }
 body {
-  background-color: rgb(78, 78, 78);
+  background-color:var(--button-color-hover);
   background-image: var(--bg-img);
   background-repeat: no-repeat;
   background-size: cover;
@@ -64,11 +64,11 @@ main {
   padding: 0;
   margin: 0;
 }
-.current .current--date {
+.current--date {
   font-size: 32px;
   font-variant: small-caps;
 }
-.current--date .current--date--down-arrow {
+.current--date--arrow {
   background-image: url(../assets/icons/Fleche.svg);
   background-repeat: no-repeat;
   background-size: contain;
@@ -113,20 +113,21 @@ main {
   box-shadow: 0px 0px 3px 0px var(--inner-top-right) inset,
     0px 0px 4px 4px var(--text-shadow) inset;
 }
-.current--date-menu .current--date-menu--day1:hover {
+.current--date-menu p:first-child:hover {
   border-radius: 30px 30px 0 0;
   border-top: none;
 }
-.current--date-menu .current--date-menu--day6:hover {
+.current--date-menu p:last-child:hover {
   border-radius: 0 0 30px 30px;
   border-bottom: none;
 }
-.current .current--conditions {
+.current--conditions {
   display: flex;
   align-items: center;
   gap: 13px;
+  font-size: 40px;
 }
-.current--conditions .current--conditions--weather {
+.current--conditions--icon {
   width: 104px;
   height: 88px;
   background-image: var(--weather-icon);
@@ -134,10 +135,7 @@ main {
   background-position: center;
   filter: drop-shadow(inset 0 1px 3px var(--text-shadow));
 }
-.current--conditions .current--conditions--temp {
-  font-size: 40px;
-}
-.current .current--place {
+.current--place {
   font-size: 24px;
 }
 
@@ -159,7 +157,7 @@ main {
   padding: 0;
   margin: 0;
 }
-.hourly .hourly--hour {
+.hourly > div {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -167,10 +165,10 @@ main {
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
 }
-.hourly--hour .hourly--hour--time {
+.hourly > div > p:first-child {
   font-size: 20px;
 }
-.hourly--hour .hourly--hour--weather {
+.hourly--icon {
   width: 30px;
   height: 30px;
   background-image: var(--weather-icon);
@@ -178,7 +176,7 @@ main {
   background-size: contain;
   background-position: center;
 }
-.hourly--hour .hourly--hour--temp {
+.hourly > div > p:last-child {
   font-size: 16px;
 }
 
@@ -200,26 +198,26 @@ main {
 
   font-family: "Open Sans", sans-serif;
 }
-.city-bio {
-  font-size: 24px;
-  font-weight: 700;
-}
 .city-bio * {
   padding: 0;
   margin: 0;
 }
-.city-bio .city-bio--wiki {
+.city-bio h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.city-bio p {
   font-size: 14px;
   font-weight: 600;
 }
-.city-bio .city-bio--stats {
+.city-bio--stats {
   margin: 14px;
 
   font-size: 16px;
   font-weight: 700;
   text-align: left;
 }
-.city-bio .city-bio--toggle {
+.city-bio--toggle {
   width: fit-content;
   background-color: var(--button-color);
   backdrop-filter: blur(20);
@@ -248,12 +246,12 @@ main {
 
   font-family: "Open Sans", sans-serif;
 }
-.main-menu .main-menu--nav {
+.main-menu--nav {
   display: flex;
   justify-content: space-between;
   padding: 12px 24px;
 }
-.main-menu--nav .main-menu--nav--search {
+.main-menu--nav--search {
   width: 54vw;
   background-color: var(--inner-bottom-left);
   border-radius: 10px;
@@ -277,11 +275,11 @@ main {
 .main-menu--nav--search input::placeholder {
   color: rgb(255, 255, 255, 0.8);
 }
-.main-menu .main-menu--default-list {
+.main-menu--list {
   margin-top: 4px;
 }
-.main-menu .main-menu--default-list h2 {
-  background: rgba(150, 150, 150, 0.5);
+.main-menu--list h2 {
+  background-color: rgba(150, 150, 150, 0.7);
   box-shadow: -3px 0px 4px 0px rgba(255, 255, 255, 0.5) inset,
     3px 0px 4px 0px rgba(0, 0, 0, 0.5) inset;
   margin: 0;
@@ -294,29 +292,67 @@ main {
   font-size: 28px;
   font-weight: 600;
 }
-.main-menu .main-menu--default-list img {
+.main-menu--list img {
   margin: auto 0;
 }
-.main-menu .main-menu--default-list div {
+.main-menu--list div {
   display: flex;
 }
-.main-menu .main-menu--default-list div:hover {
-  box-shadow: 0px 0px 3px 0px var(--inner-top-right) inset,
-    0px 0px 4px 4px var(--text-shadow) inset;
+.main-menu--list div:hover,
+.weather-type:hover {
+  box-shadow: 0px 0px 3px 1px var(--inner-top-right) inset,
+    0px 0px 4px 4px var(--inner-bottom-left) inset;
 }
-.main-menu .main-menu--default-list:last-child div:last-child:hover {
+.main-menu--list:last-child div:last-child:hover {
   border-radius: 0 0 24px 24px;
   padding-bottom: 7px;
 }
-.main-menu .main-menu--default-list p {
+.main-menu--list p {
   margin: 8px 20px;
   padding: 0;
-
   font-size: 20px;
 }
-.main-menu--default-list div > p:first-child {
+.main-menu--list > div > img {
+  margin-right: 20px;
+}
+.main-menu--list div > p:first-child {
   margin-right: auto;
 }
-.main-menu--default-list div > p:last-child {
+.main-menu--list div > p:last-child {
+  margin-left: auto;
+}
+
+.main-menu--weather-types nav {
+  margin-bottom: 35px;
+
+  display: flex;
+  justify-content: center;
+}
+.weather-type {
+  width: 60px;
+  height: 48px;
+
+  border-radius: 5px;
+}
+.weather-type:hover {
+  box-shadow: -1px -1px 2px 0px var(--inner-top-right) inset,
+    1px 1px 2px 0px var(--inner-bottom-left) inset;
+}
+.weather-type.selected {
+  box-shadow: -2px -2px 4px 0px rgb(255, 255, 255, 0.6) inset,
+    2px 2px 4px 0px rgb(0, 0, 0, 0.6) inset;
+}
+.city-by-weather {
+  display: flex;
+}
+.city-by-weather > * {
+  margin: 10.5px 16px;
+  padding: 0;
+  font-size: 24px;
+}
+.city-by-weather > :first-child {
+  margin-right: auto;
+}
+.city-by-weather > :last-child {
   margin-left: auto;
 }

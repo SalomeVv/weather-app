@@ -6,8 +6,8 @@
     <title>Weather App</title>
     <link rel="stylesheet" href="src/css/style.css" />
   </head>
-  <body class="p-cloudy">
-    <!--<header>
+  <body class="storm">
+    <header>
       <button class="menu" type="button">
         <img
           src="src/assets/icons/burger-menu.svg"
@@ -21,55 +21,52 @@
       <div class="current">
         <button class="current--date" type="button">
           <span class="inner-shadow"> Today</span>
-          <div class="current--date--down-arrow"></div>
+          <div class="current--date--arrow"></div>
         </button>
         <div class="current--conditions">
-          <div class="current--conditions--weather"></div>
-          <p class="current--conditions--temp inner-shadow">13°</p>
+          <div class="current--conditions--icon"></div>
+          <p class="inner-shadow">13°</p>
         </div>
         <p class="current--place inner-shadow">
-          <span class="city">Besançon</span> -
-          <span class="country">France</span>
+          <span id="current_city">Besançon</span> -
+          <span id="current_country">France</span>
         </p>
       </div>
       <div class="hourly">
-        <div class="hourly--hour">
-          <p class="hourly--hour--time">5H</p>
-          <div class="hourly--hour--weather"></div>
-          <p class="hourly--hour--temp">6°</p>
+        <div>
+          <p>5H</p>
+          <div class="hourly--icon"></div>
+          <p>6°</p>
         </div>
-        <div class="hourly--hour">
-          <p class="hourly--hour--time">6H</p>
-          <div class="hourly--hour--weather"></div>
-          <p class="hourly--hour--temp">7°</p>
+        <div>
+          <p>6H</p>
+          <div class="hourly--icon"></div>
+          <p>7°</p>
         </div>
-        <div class="hourly--hour">
-          <p class="hourly--hour--time">7H</p>
-          <div class="hourly--hour--weather"></div>
-          <p class="hourly--hour--temp">7°</p>
+        <div>
+          <p>7H</p>
+          <div class="hourly--icon"></div>
+          <p>7°</p>
         </div>
-        <div class="hourly--hour">
-          <p class="hourly--hour--time">8H</p>
-          <div class="hourly--hour--weather"></div>
-          <p class="hourly--hour--temp">9°</p>
+        <div>
+          <p>8H</p>
+          <div class="hourly--icon"></div>
+          <p>9°</p>
         </div>
-        <div class="hourly--hour">
-          <p class="hourly--hour--time">9H</p>
-          <div class="hourly--hour--weather"></div>
-          <p class="hourly--hour--temp">9°</p>
+        <div>
+          <p>9H</p>
+          <div class="hourly--icon"></div>
+          <p>9°</p>
         </div>
-        <div class="hourly--hour">
-          <p class="hourly--hour--time">10H</p>
-          <div class="hourly--hour--weather"></div>
-          <p class="hourly--hour--temp">11°</p>
+        <div>
+          <p>10H</p>
+          <div class="hourly--icon"></div>
+          <p>11°</p>
         </div>
       </div>
       <div class="city-bio">
+        <h2>Besançon - France</h2>
         <p>
-          <span class="city">Besançon</span> -
-          <span class="country">France</span>
-        </p>
-        <p class="city-bio--wiki">
           Besançon est une commune de l'Est de la France, préfecture du
           département du Doubs et siège du conseil régional de
           Bourgogne-Franche-Comté. Située en bordure du massif du Jura à moins
@@ -80,10 +77,24 @@
           <span class="inner-shadow">Show More</span>
         </button>
       </div>
-    </main>-->
+    </main>
+  </body>
+
+  <template id="date-menu">
+    <nav class="current--date-menu">
+      <p id="day1">Tomorrow</p>
+      <p id="day2">Wednesday</p>
+      <p id="day3">Thursday</p>
+      <p id="day4">Friday</p>
+      <p id="day5">Saturday</p>
+      <p id="day6">Sunday</p>
+    </nav>
+  </template>
+
+  <template id="main-menu--core">
     <div class="main-menu">
       <div class="main-menu--nav">
-        <button class="main-menu--nav--back" type="button">
+        <button id="back_button" type="button">
           <img
             src="src/assets/icons/retours.svg"
             alt="back button"
@@ -95,14 +106,10 @@
           <input
             type="text"
             name="main-menu--nav--search--input"
-            id="main-menu--nav--search--input"
+            id="search_input"
             placeholder="search for a city..."
           />
-          <button
-            type="submit"
-            class="main-menu--nav--search--submit"
-            id="main-menu--nav--search--submit"
-          >
+          <button type="submit" id="search_submit">
             <img
               src="src/assets/icons/search-icon.svg"
               alt="search icon"
@@ -111,7 +118,7 @@
             />
           </button>
         </div>
-        <button class="main-menu--nav--settings" type="button">
+        <button id="settings" type="button">
           <img
             src="src/assets/icons/slider.svg"
             alt="settings weather"
@@ -120,48 +127,173 @@
           />
         </button>
       </div>
-      <div class="main-menu--default-list" id="main-menu--most-searched">
-        <h2>
-          <img
-            src="src/assets/icons/coeur.svg"
-            alt="heart"
-            width="22"
-            height="22"
-          />
-          Most Searched
-        </h2>
-        <div><p>Besançon</p><p>13°</p></div>
-        <div><p>Paris</p><p>14°</p></div>
-        <div><p>Lyon</p><p>13°</p></div>
-        <div><p>Marseille</p><p>17°</p></div>
-        <div><p>Montceau-les-Mines</p><p>12°</p></div>
+    </div>
+  </template>
+  <template id="main-menu--suggestions">
+    <div class="main-menu--list">
+      <h2>
+        <img
+          src="src/assets/icons/coeur.svg"
+          alt="heart"
+          width="22"
+          height="22"
+        />
+        Most Searched
+      </h2>
+      <div class="most-searched">
+        <p>Besançon</p>
+        <p>13°</p>
       </div>
-      <div class="main-menu--default-list" id="main-menu--suggestions">
-        <h2>
-          <img
-            src="src/assets/icons/etoile.svg"
-            alt="star"
-            width="22"
-            height="22"
-          />Suggestions
-        </h2>
-        <div><p>Vesoul</p><p>12°</p></div>
-        <div><p>Dole</p><p>14°</p></div>
-        <div><p>Pontarlier</p><p>10°</p></div>
-        <div><p>Lure</p><p>12°</p></div>
-        <div><p>Montbéliard</p><p>12°</p></div>
+      <div class="most-searched">
+        <p>Paris</p>
+        <p>14°</p>
+      </div>
+      <div class="most-searched">
+        <p>Lyon</p>
+        <p>13°</p>
+      </div>
+      <div class="most-searched">
+        <p>Marseille</p>
+        <p>17°</p>
+      </div>
+      <div class="most-searched">
+        <p>Montceau-les-Mines</p>
+        <p>12°</p>
       </div>
     </div>
-  </body>
-
-  <template id="date-menu">
-    <div class="current--date-menu">
-      <p class="current--date-menu--day1">Tomorrow</p>
-      <p class="current--date-menu--day2">Wednesday</p>
-      <p class="current--date-menu--day3">Thursday</p>
-      <p class="current--date-menu--day4">Friday</p>
-      <p class="current--date-menu--day5">Saturday</p>
-      <p class="current--date-menu--day6">Sunday</p>
+    <div class="main-menu--list">
+      <h2>
+        <img
+          src="src/assets/icons/etoile.svg"
+          alt="star"
+          width="22"
+          height="22"
+        />Suggestions
+      </h2>
+      <div class="city-suggestion">
+        <p>Vesoul</p>
+        <p>12°</p>
+      </div>
+      <div class="city-suggestion">
+        <p>Dole</p>
+        <p>14°</p>
+      </div>
+      <div class="city-suggestion">
+        <p>Pontarlier</p>
+        <p>10°</p>
+      </div>
+      <div class="city-suggestion">
+        <p>Lure</p>
+        <p>12°</p>
+      </div>
+      <div class="city-suggestion">
+        <p>Montbéliard</p>
+        <p>12°</p>
+      </div>
+    </div>
+  </template>
+  <template id="main-menu--weather">
+    <div class="main-menu--weather-types">
+      <nav>
+        <button
+          type="button"
+          class="weather-type"
+          id="weather_sunny"
+          class="selected"
+        >
+          <img
+            src="src/assets/icons/soleil.svg"
+            alt="sun icon"
+            width="40"
+            height="40"
+          />
+        </button>
+        <button type="button" class="weather-type" id="weather_pcloudy">
+          <img
+            src="src/assets/icons/nuage-soleil.svg"
+            alt="partly cloudy icon"
+            width="52"
+            height="40"
+          />
+        </button>
+        <button type="button" class="weather-type" id="weather_cloudy">
+          <img
+            src="src/assets/icons/nuage.svg"
+            alt="cloudy icon"
+            width="52"
+            height="40"
+          />
+        </button>
+        <button type="button" class="weather-type" id="weather_rainy">
+          <img
+            src="src/assets/icons/pluie.svg"
+            alt="rain icon"
+            width="40"
+            height="48"
+          />
+        </button>
+        <button type="button" class="weather-type" id="weather_storm">
+          <img
+            src="src/assets/icons/orage.svg"
+            alt="storm icon"
+            width="40"
+            height="48"
+          />
+        </button>
+        <button type="button" class="weather-type" id="weather_snow">
+          <img
+            src="src/assets/icons/flocon.svg"
+            alt="snow icon"
+            width="40"
+            height="40"
+          />
+        </button>
+      </nav>
+      <div class="city-by-weather">
+        <p>Auxerre</p>
+        <img
+          src="src/assets/icons/soleil.svg"
+          alt="sun icon"
+          width="36"
+          height="36"
+        />
+      </div>
+      <div class="city-by-weather">
+        <p>Paris</p>
+        <img
+          src="src/assets/icons/soleil.svg"
+          alt="sun icon"
+          width="36"
+          height="36"
+        />
+      </div>
+      <div class="city-by-weather">
+        <p>Lyon</p>
+        <img
+          src="src/assets/icons/soleil.svg"
+          alt="sun icon"
+          width="36"
+          height="36"
+        />
+      </div>
+      <div class="city-by-weather">
+        <p>Marseille</p>
+        <img
+          src="src/assets/icons/soleil.svg"
+          alt="sun icon"
+          width="36"
+          height="36"
+        />
+      </div>
+      <div class="city-by-weather">
+        <p>Montceau-les-Mines</p>
+        <img
+          src="src/assets/icons/soleil.svg"
+          alt="sun icon"
+          width="36"
+          height="36"
+        />
+      </div>
     </div>
   </template>
 </html>
