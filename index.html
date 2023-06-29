@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
+    <script defer src="src/js/app.js"></script>
     <link rel="stylesheet" href="src/css/style.css" />
   </head>
-  <body class="storm">
+  <body class="cloudy">
     <header>
-      <button class="menu" type="button">
+      <button id="menu" type="button">
         <img
           src="src/assets/icons/burger-menu.svg"
           alt="menu"
@@ -75,12 +76,10 @@
         </p>
         <button class="city-bio--toggle" type="button">
           <span class="inner-shadow">Show More</span>
-        </button>
-      </div>
     </main>
   </body>
 
-  <template id="date-menu">
+  <template id="date_menu">
     <nav class="current--date-menu">
       <p id="day1">Tomorrow</p>
       <p id="day2">Wednesday</p>
@@ -91,7 +90,7 @@
     </nav>
   </template>
 
-  <template id="main-menu--core">
+  <template id="main_menu_core">
     <div class="main-menu">
       <div class="main-menu--nav">
         <button id="back_button" type="button">
@@ -129,78 +128,75 @@
       </div>
     </div>
   </template>
-  <template id="main-menu--suggestions">
-    <div class="main-menu--list">
-      <h2>
-        <img
-          src="src/assets/icons/coeur.svg"
-          alt="heart"
-          width="22"
-          height="22"
-        />
-        Most Searched
-      </h2>
-      <div class="most-searched">
-        <p>Besançon</p>
-        <p>13°</p>
+  <template id="main_menu_suggestions">
+    <div class="main-menu--suggestions">
+      <div class="main-menu--list">
+        <h2>
+          <img
+            src="src/assets/icons/coeur.svg"
+            alt="heart"
+            width="22"
+            height="22"
+          />
+          Most Searched
+        </h2>
+        <div class="most-searched">
+          <p>Besançon</p>
+          <p>13°</p>
+        </div>
+        <div class="most-searched">
+          <p>Paris</p>
+          <p>14°</p>
+        </div>
+        <div class="most-searched">
+          <p>Lyon</p>
+          <p>13°</p>
+        </div>
+        <div class="most-searched">
+          <p>Marseille</p>
+          <p>17°</p>
+        </div>
+        <div class="most-searched">
+          <p>Montceau-les-Mines</p>
+          <p>12°</p>
+        </div>
       </div>
-      <div class="most-searched">
-        <p>Paris</p>
-        <p>14°</p>
-      </div>
-      <div class="most-searched">
-        <p>Lyon</p>
-        <p>13°</p>
-      </div>
-      <div class="most-searched">
-        <p>Marseille</p>
-        <p>17°</p>
-      </div>
-      <div class="most-searched">
-        <p>Montceau-les-Mines</p>
-        <p>12°</p>
-      </div>
-    </div>
-    <div class="main-menu--list">
-      <h2>
-        <img
-          src="src/assets/icons/etoile.svg"
-          alt="star"
-          width="22"
-          height="22"
-        />Suggestions
-      </h2>
-      <div class="city-suggestion">
-        <p>Vesoul</p>
-        <p>12°</p>
-      </div>
-      <div class="city-suggestion">
-        <p>Dole</p>
-        <p>14°</p>
-      </div>
-      <div class="city-suggestion">
-        <p>Pontarlier</p>
-        <p>10°</p>
-      </div>
-      <div class="city-suggestion">
-        <p>Lure</p>
-        <p>12°</p>
-      </div>
-      <div class="city-suggestion">
-        <p>Montbéliard</p>
-        <p>12°</p>
+      <div class="main-menu--list">
+        <h2>
+          <img
+            src="src/assets/icons/etoile.svg"
+            alt="star"
+            width="22"
+            height="22"
+          />Suggestions
+        </h2>
+        <div class="city-suggestion">
+          <p>Vesoul</p>
+          <p>12°</p>
+        </div>
+        <div class="city-suggestion">
+          <p>Dole</p>
+          <p>14°</p>
+        </div>
+        <div class="city-suggestion">
+          <p>Pontarlier</p>
+          <p>10°</p>
+        </div>
+        <div class="city-suggestion">
+          <p>Lure</p>
+          <p>12°</p>
+        </div>
+        <div class="city-suggestion">
+          <p>Montbéliard</p>
+          <p>12°</p>
+        </div>
       </div>
     </div>
   </template>
-  <template id="main-menu--weather">
+  <template id="main_menu_weather">
     <div class="main-menu--weather-types">
       <nav>
-        <button
-          type="button"
-          class="weather-type"
-          id="weather_sunny"
-          class="selected"
-        >
+        <button type="button" class="weather-type selected" id="weather_sunny">
           <img
             src="src/assets/icons/soleil.svg"
             alt="sun icon"
