@@ -88,47 +88,44 @@ function getWeather(weatherId) {
  * @param {Integer} index
  * @returns
  */
-function getNextDay(directory, index) {
-  console.log("getNextDay index " + index);
+function secondDayMidday(directory, index) {
   const currentTime = new Date(directory[index].dt_txt).getHours();
-  console.log("getNextDay current time " + currentTime);
-  let nextDay;
+  let secondDay;
   if (currentTime > 12) {
-    nextDay = directory.findIndex((element) =>
+    secondDay = directory.findIndex((element) =>
       element.dt_txt.includes("12:00")
     );
-    console.log("next day midday index afternoon " + nextDay);
-    return nextDay;
+    return secondDay;
   } else {
-    nextDay = directory.findIndex((element) =>
-      element.dt_txt.includes("12:00")
-    );
-    nextDay += 8;
-    console.log("next day midday index morning " + nextDay);
-    return nextDay;
+    secondDay =
+      8 + directory.findIndex((element) => element.dt_txt.includes("12:00"));
+    return secondDay;
   }
 }
 
 class Current {
-  constructor(directory, index, city) {
+  constructor(directory, index) {
     this.directory = directory;
     this.index = index;
     this.day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
       new Date(directory[index].dt_txt).getTime()
     );
     this.temp = Math.round(directory[index].main.temp);
+    this.weather = getWeather(directory[index].weather[0].id);
     this.city = city.name;
     this.country = city.country;
   }
   relativeDay() {
-    let tomorrow = getNextDay(this.directory, 0);
+    let tomorrow = secondDayMidday(this.directory, 0);
     if (this.directory[this.index] == this.directory[0]) {
-      return "Today";
+      this.day = "Today";
     } else if (this.directory[this.index] == this.directory[tomorrow]) {
-      return "Tomorrow";
+      this.day = "Tomorrow";
     }
   }
   fill() {
+    document.querySelector("body").classList = `${this.weather}`;
+
     document.querySelector(".current span").innerHTML = `${this.day}`;
     document.querySelector(
       ".current--conditions p"
@@ -136,26 +133,61 @@ class Current {
     document.querySelector("#current_city").innerHTML = `${this.city}`;
     document.querySelector("#current_country").innerHTML = `${this.country}`;
   }
-  openMenu() {
+}
+
+class CurrentMenu {
+  constructor(directory, index) {
+    this.directory = directory;
+    this.index = index;
+  }
+  getIndexList(from, to, indexList) {
+    if (from !== undefined && to !== undefined && indexList !== undefined) {
+      indexList.unshift(0);
+      let iLto = indexList.indexOf(to);
+      indexList.splice(iLto, 1);
+      return indexList;
+    } else {
+      let dayIndexList = [];
+      for (let i = 1, dayIndex; i < 5; i++) {
+        if (i == 1) {
+          dayIndex = secondDayMidday(this.directory, 0);
+          dayIndexList.push(dayIndex);
+        } else {
+          dayIndex += 8;
+          dayIndexList.push(dayIndex);
+        }
+      }
+      return dayIndexList;
+    }
+  }
+
+  open(dayIndexList) {
     const nav = makeEl(
       "nav",
       document.querySelector(".current"),
       [["classList", "current--date-menu"]],
       document.querySelector(".current--conditions")
     );
-    for (let i = 0, dayIndex = 0; i < 5; i++) {
-      let dayOfWeek;
-      if (i == 0 || i == 1) {
-        dayOfWeek = this.relativeDay(this.directory, this.index);
+    let dayOfWeek;
+    for (let dayIndex of dayIndexList) {
+      if (dayIndex == 0) {
+        dayOfWeek = "Today";
+      } else if (dayIndex == secondDayMidday(this.directory, 0)) {
+        dayOfWeek = "Tomorrow";
       } else {
         dayOfWeek = new Intl.DateTimeFormat("en-US", {
           weekday: "long",
         }).format(new Date(this.directory[dayIndex].dt_txt).getTime());
       }
       makeEl("p", nav, [["innerHTML", `${dayOfWeek}`]]);
-      dayIndex = getNextDay(this.directory, dayIndex);
-      console.log("dayIndex new value "+dayIndex);
     }
+    document.querySelector(".current--date--arrow").style.backgroundImage =
+      "url(src/assets/icons/Fleche-up.svg)";
+  }
+  close() {
+    document.querySelector(".current--date-menu").remove();
+    document.querySelector(".current--date--arrow").style.backgroundImage =
+      "url(src/assets/icons/Fleche.svg)";
   }
 }
 
@@ -166,8 +198,8 @@ class HourForecast {
     this.temp = Math.round(temp);
   }
 
-  deploy(parent) {
-    const wrapper = makeEl("div", parent);
+  deploy() {
+    const wrapper = makeEl("div", document.querySelector(".hourly"));
     makeEl("p", wrapper, [["innerHTML", `${this.time}H`]]);
     makeEl("div", wrapper, [["classList", `hourly--icon ${this.weather}`]]);
     makeEl("p", wrapper, [["innerHTML", `${this.temp}°`]]);
@@ -189,7 +221,12 @@ let city = {
   name: "Besançon",
   country: "France",
 };
-
+// fetch(
+//     `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.long}&appid=${openWeatherKey}&units=metric`
+//   )
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);})
 fetch(
   `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.long}&appid=${openWeatherKey}&units=metric`
 )
@@ -197,29 +234,51 @@ fetch(
   .then((data) => {
     console.log(data);
 
-    document.querySelector("body").classList = `${getWeather(
-      data.list[0].weather[0].id
-    )}`;
     const current = new Current(data.list, 0, city);
-    current.day = current.relativeDay();
+    current.relativeDay();
     current.fill();
 
     const currentDateBtn = document.querySelector(".current--date");
+    let from,
+      to = current.index;
     currentDateBtn.addEventListener("click", () => {
+      const nav = new CurrentMenu(current.directory, current.index);
       if (document.querySelector(".current--date-menu") === null) {
-        // document
-        //   .querySelector(".current")
-        //   .insertBefore(
-        //     basicClone("#date_menu"),
-        //     document.querySelector(".current--conditions")
-        //   );
-        current.openMenu();
-        document.querySelector(".current--date--arrow").style.backgroundImage =
-          "url(src/assets/icons/Fleche-up.svg)";
+        let weeklyIndex = nav.getIndexList(from, to, nav.getIndexList());
+        nav.open(weeklyIndex);
+        const navDays = document.querySelectorAll(".current--date-menu > p");
+        for (let i = 0; i < navDays.length; i++) {
+          navDays[i].addEventListener("click", () => {
+            from = to;
+            nav.close();
+            const day = new Current(nav.directory, weeklyIndex[i]);
+            to = weeklyIndex[i];
+            day.relativeDay();
+            day.fill();
+            document.querySelector(".hourly").replaceChildren();
+            if (weeklyIndex[i] == 0) {
+              for (let i = 1; i < 7; i++) {
+                const forecast = new HourForecast(
+                  data.list[i].dt_txt,
+                  data.list[i].weather[0].id,
+                  data.list[i].main.temp
+                );
+                forecast.deploy();
+              }
+            } else {
+              for (let j = weeklyIndex[i] - 4; j < weeklyIndex[i] + 4; j++) {
+                const forecast = new HourForecast(
+                  data.list[j].dt_txt,
+                  data.list[j].weather[0].id,
+                  data.list[j].main.temp
+                );
+                forecast.deploy();
+              }
+            }
+          });
+        }
       } else {
-        document.querySelector(".current--date-menu").remove();
-        document.querySelector(".current--date--arrow").style.backgroundImage =
-          "url(src/assets/icons/Fleche.svg)";
+        nav.close();
       }
     });
 
@@ -229,7 +288,7 @@ fetch(
         data.list[i].weather[0].id,
         data.list[i].main.temp
       );
-      forecast.deploy(document.querySelector(".hourly"));
+      forecast.deploy();
     }
   })
   .catch((err) => console.log("Open Weather Forecast Request Failed", err));

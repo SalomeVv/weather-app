@@ -126,3 +126,76 @@ function openMenu() {
     console.log("dayIndex new value "+dayIndex);
   }
 }
+
+class Forecast {
+  // constructor(time, weather, temp) {
+  //   this.time = new Date(time).getHours();
+  //   this.weather = getWeather(weather);
+  //   this.temp = Math.round(temp);
+constructor(time, weather, temp, startingPoint) {
+  this.time = new Date(time).getHours();
+  this.temp = Math.round(temp);
+  this.start = startingPoint;
+  if (weather.includes("[i]")) {
+      let startWeather = weather.replace('[i]', '[this.start]');
+      this.weather = getWeather(startWeather);
+  } else {
+      this.weather = getWeather(weather);
+  }
+  this.time = new Date(data.list[this.start].dt_txt).getHours(),
+  this.weather = getWeather(data.list[this.start].weather[0].id),
+  this.temp = Math.round(data.list[this.start].main.temp)
+}
+single() {
+  const wrapper = makeEl("div", document.querySelector(".hourly"));
+  makeEl("p", wrapper, [["innerHTML", `${this.time}H`]]);
+  makeEl("div", wrapper, [["classList", `hourly--icon ${this.weather}`]]);
+  makeEl("p", wrapper, [["innerHTML", `${this.temp}°`]]);
+}
+
+full() {
+  for (let i = this.start; i < this.start + 6 ; i++) {
+      const forecast = new Forecast(i);
+      forecast.single();
+    }
+}
+}
+const currentForecast = new Forecast(1);
+    currentForecast.full();
+
+    // for (let i = 1; i < 7; i++) {
+    //   const forecast = new HourForecast(
+    //     data.list[i].dt_txt,
+    //     data.list[i].weather[0].id,
+    //     data.list[i].main.temp
+    //   );
+    //   forecast.deploy();
+    // }
+
+  //   open() {
+  //     const nav = makeEl(
+  //       "nav",
+  //       document.querySelector(".current"),
+  //       [["classList", "current--date-menu"]],
+  //       document.querySelector(".current--conditions")
+  //     );
+  //     const dayIndexList = [];
+  //     for (let i = 1, dayIndex; i < 5; i++) {
+  //       let dayOfWeek;
+  //       if (i == 1) {
+  //         dayIndex = secondDayMidday(this.directory, 0);
+  //         dayIndexList.push(dayIndex);
+  //         dayOfWeek = "Tomorrow";
+  //       } else {
+  //         dayIndex += 8;
+  //         dayIndexList.push(dayIndex);
+  //         dayOfWeek = new Intl.DateTimeFormat("en-US", {
+  //           weekday: "long",
+  //         }).format(new Date(this.directory[dayIndex].dt_txt).getTime());
+  //       }
+  //       makeEl("p", nav, [["innerHTML", `${dayOfWeek}`]]);
+  //     }
+  //     console.log(dayIndexList);
+  //     return dayIndexList;
+  //   }
+  // }
