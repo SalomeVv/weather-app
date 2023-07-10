@@ -206,8 +206,6 @@ class HourForecast {
   }
 }
 
-const openWeatherKey = "b9ead5b48dff0a393ee56b4dca49fc47";
-
 // fetch("src/js/city.list.json")
 //   .then((response) => response.json())
 //   .then((data) => {
@@ -221,6 +219,8 @@ let city = {
   name: "Besançon",
   country: "France",
 };
+
+const openWeatherKey = "b9ead5b48dff0a393ee56b4dca49fc47";
 // fetch(
 //     `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.long}&appid=${openWeatherKey}&units=metric`
 //   )
@@ -293,43 +293,183 @@ fetch(
   })
   .catch((err) => console.log("Open Weather Forecast Request Failed", err));
 
+const favList = [
+  { name: "Besançon", temp: 13 },
+  { name: "Paris", temp: 14 },
+  { name: "Lyon", temp: 13 },
+  { name: "Marseille", temp: 17 },
+  { name: "Montceau-les-Mines", temp: 12 },
+];
+const miscList = [
+  { name: "Vesoul", temp: 12 },
+  { name: "Dole", temp: 14 },
+  { name: "Pontarlier", temp: 10 },
+  { name: "Lure", temp: 12 },
+  { name: "Montbéliard", temp: 12 },
+];
+
+class MainMenu {
+  constructor() {
+    this._createBaseMenu();
+    this._initListeners();
+  }
+  _createBaseMenu() {
+    const mainMenu = makeEl("div", document.body, [["classList", "main-menu"]]);
+    const nav = makeEl("div", mainMenu, [["classList", "main-menu--nav"]]);
+    makeEl("button", nav, [
+      ["classList", "back-button"],
+      ["alt", "back button"],
+    ]);
+    const searchWrapper = makeEl("div", nav, [
+      ["classList", "main-menu--nav--search"],
+    ]);
+    const searchInput = makeEl("input", searchWrapper, [
+      ["name", "main-menu--nav--search--input"],
+      ["placeholder", "search for a city..."],
+    ]);
+    const searchSubmit = makeEl("button", searchWrapper, [
+      ["type", "submit"],
+      ["classList", "submit-button"],
+      ["alt", "search icon"],
+    ]);
+    makeEl("button", nav, [
+      ["classList", "settings-button"],
+      ["alt", "settings"],
+    ]);
+    makeEl("div", mainMenu, [
+      ["classList", "main-menu--suggestions"]]);
+    new Suggestions(favList, miscList);
+  }
+  _initListeners() {
+    const backButton = document.querySelector(".main-menu--nav .back-button");
+    backButton.addEventListener("click", () => {
+      if (document.querySelector(".main-menu--weather-types") !== null) {
+        document.querySelector(".main-menu--weather-types").remove();
+        makeEl("div", document.querySelector(".main-menu"), [
+          ["classList", "main-menu--suggestions"]]);
+        new Suggestions(favList, miscList);
+      } else {
+        document.querySelector(".main-menu").remove();
+        document.querySelector("header").style.display = "flex";
+        document.querySelector("main").style.display = "flex";
+      }
+    });
+
+    const settings = document.querySelector(".main-menu--nav .settings-button");
+    settings.addEventListener("click", () => {
+      if (document.querySelector(".main-menu--weather-types") === null) {
+        document.querySelector(".main-menu--suggestions").remove();
+        new citiesByWeather();
+      }
+    });
+  }
+}
+
+class Suggestions {
+  constructor(fav, misc) {
+    this.fav = fav;
+    this.misc = misc;
+    this._createList(this.fav);
+    this._createList(this.misc);
+  }
+  _createList(src) {
+    let icon, titleContent;
+    switch (src) {
+      case this.fav:
+        icon = "heart";
+        titleContent = "Most Searched";
+        break;
+      case this.misc:
+        icon = "star";
+        titleContent = "Suggestions";
+        break;
+    }
+    const suggestionsWrapper = document.querySelector(".main-menu--suggestions");
+    const list = makeEl("div", suggestionsWrapper, [
+      ["classList", "main-menu--list"],
+    ]);
+    const title = makeEl("h2", list);
+    makeEl("div", title, [
+      ["classList", `${icon}`],
+      ["alt", `${icon}`],
+    ]);
+    title.textContent = `${titleContent}`;
+    for (let city of src) {
+      const wrapper = makeEl("div", list, [["classList", "most-searched"]]);
+      makeEl("p", wrapper, [["textContent", `${city.name}`]]);
+      makeEl("p", wrapper, [["textContent", `${city.temp}°`]]);
+    }
+  }
+}
+
+const defaultWeatherCities = ["Auxerre", "Paris", "Lyon", "Marseille", "Montceau-les-mines"]
+class citiesByWeather {
+  constructor() {
+    this._createNav();
+    this.createList(defaultWeatherCities);
+  }
+  _createNav(){
+    const mainMenu = document.querySelector(".main-menu");
+    const weatherMenu = makeEl("div", mainMenu, [["classList","main-menu--weather-types"]]);
+    const nav = makeEl("nav", weatherMenu);
+    makeEl("button", nav, [["classList","weather-type sunny"],["alt","sun icon"]]);
+    makeEl("button", nav, [["classList","weather-type p-cloudy"],["alt","partly cloudy icon"]]);
+    makeEl("button", nav, [["classList","weather-type cloudy"],["alt","cloudy icon"]]);
+    makeEl("button", nav, [["classList","weather-type rainy"],["alt","rain icon"]]);
+    makeEl("button", nav, [["classList","weather-type storm"],["alt","storm icon"]]);
+    makeEl("button", nav, [["classList","weather-type snow"],["alt","snow icon"]]);
+  }
+  createList(list) {
+    console.log(list);
+    for (let city of list) {
+      const weatherMenu = document.querySelector(".main-menu--weather-types");
+      let wrapper = makeEl("div", weatherMenu, [["classList", "city-by-weather"]]);
+      makeEl("p", wrapper, [["textContent", `${city}`]]);
+      makeEl("div", wrapper);
+    }
+  }
+}
+
 const menuBtn = document.getElementById("menu");
 menuBtn.addEventListener("click", () => {
   document.querySelector("header").style.display = "none";
   document.querySelector("main").style.display = "none";
 
-  document.body.appendChild(basicClone("#main_menu_core"));
-  document
-    .querySelector(".main-menu")
-    .appendChild(basicClone("#main_menu_suggestions"));
+  
+  new MainMenu();
 
-  const settings = document.getElementById("settings");
-  settings.addEventListener("click", () => {
-    if (document.querySelector(".main-menu--weather-types") === null) {
-      document
-        .querySelector(".main-menu")
-        .replaceChild(
-          basicClone("#main_menu_weather"),
-          document.querySelector(".main-menu--suggestions")
-        );
-    }
-  });
+  // document.body.appendChild(basicClone("#main_menu_core"));
+  // document
+  //   .querySelector(".main-menu")
+  //   .appendChild(basicClone("#main_menu_suggestions"));
 
-  const backBtn = document.getElementById("back_button");
-  backBtn.addEventListener("click", () => {
-    if (document.querySelector(".main-menu--weather-types") !== null) {
-      document
-        .querySelector(".main-menu")
-        .replaceChild(
-          basicClone("#main_menu_suggestions"),
-          document.querySelector(".main-menu--weather-types")
-        );
-    } else {
-      document.querySelector(".main-menu").remove();
-      document.querySelector("header").style.display = "flex";
-      document.querySelector("main").style.display = "flex";
-    }
-  });
+  // const settings = document.getElementById("settings");
+  // settings.addEventListener("click", () => {
+  //   if (document.querySelector(".main-menu--weather-types") === null) {
+  //     document
+  //       .querySelector(".main-menu")
+  //       .replaceChild(
+  //         basicClone("#main_menu_weather"),
+  //         document.querySelector(".main-menu--suggestions")
+  //       );
+  //   }
+  // });
+
+  // const backBtn = document.getElementById("back_button");
+  // backBtn.addEventListener("click", () => {
+  //   if (document.querySelector(".main-menu--weather-types") !== null) {
+  //     document
+  //       .querySelector(".main-menu")
+  //       .replaceChild(
+  //         basicClone("#main_menu_suggestions"),
+  //         document.querySelector(".main-menu--weather-types")
+  //       );
+  //   } else {
+  //     document.querySelector(".main-menu").remove();
+  //     document.querySelector("header").style.display = "flex";
+  //     document.querySelector("main").style.display = "flex";
+  //   }
+  // });
 });
 
 const showMore = document.querySelector(".city-bio--toggle");
@@ -345,15 +485,19 @@ showMore.addEventListener("click", () => {
     document.querySelector(".city-bio--full").innerHTML =
       "Capitale de la région historique et culturelle de Franche-Comté, Besançon constitue aujourd'hui un pôle administratif important au sein de la région administrative de Bourgogne-Franche-Comté en accueillant le siège du conseil régional et de la région académique ainsi qu'un certain nombre de directions régionales. Elle est également le siège d'une des quinze provinces ecclésiastiques françaises et de l'une des deux divisions de l'Armée de terre.";
 
-    const stats = document.createElement("div");
-    cityBio.insertBefore(stats, showMore);
-    stats.classList.add("city-bio--full");
-    stats.id = "stats";
-
-    const departement = document.createElement("p");
-    departement.innerHTML = "Département : Doubs";
-    departement.classList.add("city-bio--stats");
-    stats.appendChild(departement);
+    const stats = makeEl(
+      "div",
+      cityBio,
+      [
+        ["classList", "city-bio--full"],
+        ["id", "stats"],
+      ],
+      showMore
+    );
+    makeEl("p", stats, [
+      ["innerHTML", "Département : Doubs"],
+      ["classList", "city-bio--stats"],
+    ]);
 
     const population = document.createElement("p");
     population.innerHTML = "Population : 118 258 habitants (2020)";

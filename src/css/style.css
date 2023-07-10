@@ -253,6 +253,15 @@ main {
   justify-content: space-between;
   padding: 12px 24px;
 }
+.main-menu--nav .back-button {
+  width: 34px;
+  height: 24.3px;
+
+  background-image: url(../assets/icons/retours.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 .main-menu--nav--search {
   width: 54vw;
   background-color: var(--inner-bottom-left);
@@ -277,6 +286,25 @@ main {
 .main-menu--nav--search input::placeholder {
   color: rgb(255, 255, 255, 0.8);
 }
+.main-menu--nav--search .submit-button {
+  width: 20px;
+  height: 20px;
+
+  background-image: url(../assets/icons/search-icon.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.main-menu--nav .settings-button {
+  width:34px;
+  height: 31px;
+
+  background-image: url(../assets/icons/slider.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .main-menu--list {
   margin-top: 4px;
 }
@@ -294,9 +322,23 @@ main {
   font-size: 28px;
   font-weight: 600;
 }
-.main-menu--list img {
+.main-menu--list .heart,  .main-menu--list .star {
   margin: auto 0;
+  display: inline-block;
+
+  width: 22px;
+  height: 22px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
+.main-menu--list .heart {
+  background-image: url(../assets/icons/coeur.svg);
+}
+.main-menu--list .star {
+  background-image: url(../assets/icons/coeur.svg);
+}
+
 .main-menu--list div {
   display: flex;
 }
@@ -335,6 +377,11 @@ main {
   height: 48px;
 
   border-radius: 5px;
+
+  background-image: var(--weather-icon);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 .weather-type:hover {
   box-shadow: -1px -1px 2px 0px var(--inner-top-right) inset,
@@ -357,4 +404,11 @@ main {
 }
 .city-by-weather > :last-child {
   margin-left: auto;
+
+  width: 36px;
+  height: 36px;
+  background-image: var(--weather-icon);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
