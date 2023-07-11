@@ -27,7 +27,7 @@ header {
 }
 
 #menu {
-  padding: none;
+  padding: 0;
   margin: 14px;
 }
 
@@ -347,10 +347,6 @@ main {
   box-shadow: 0px 0px 3px 1px var(--inner-top-right) inset,
     0px 0px 4px 4px var(--inner-bottom-left) inset;
 }
-.main-menu--list:last-child div:last-child:hover {
-  border-radius: 0 0 24px 24px;
-  padding-bottom: 7px;
-}
 .main-menu--list p {
   margin: 8px 20px;
   padding: 0;
@@ -375,6 +371,8 @@ main {
 .weather-type {
   width: 60px;
   height: 48px;
+  box-sizing: border-box;
+  padding: 4px;
 
   border-radius: 5px;
 
@@ -382,6 +380,7 @@ main {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  background-origin: content-box;
 }
 .weather-type:hover {
   box-shadow: -1px -1px 2px 0px var(--inner-top-right) inset,

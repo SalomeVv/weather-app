@@ -199,3 +199,196 @@ const currentForecast = new Forecast(1);
   //     return dayIndexList;
   //   }
   // }
+  class Current {
+    constructor(directory, index, city) {
+      this.directory = directory;
+      this.index = index;
+      this.day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+        new Date(directory[index].dt_txt).getTime()
+      );
+      this.temp = Math.round(directory[index].main.temp);
+      this.weather = getWeather(directory[index].weather[0].id);
+      this.city = city.name;
+      this.country = city.country;
+      this._initListeners();
+    }
+    relativeDay() {
+      let tomorrow = secondDayMidday(this.directory, 0);
+      if (this.directory[this.index] == this.directory[0]) {
+        this.day = "Today";
+      } else if (this.directory[this.index] == this.directory[tomorrow]) {
+        this.day = "Tomorrow";
+      }
+    }
+    fill() {
+      document.querySelector("body").classList = `${this.weather}`;
+  
+      document.querySelector(".current span").innerHTML = `${this.day}`;
+      document.querySelector(
+        ".current--conditions p"
+      ).innerHTML = `${this.temp}°`;
+      document.querySelector("#current_city").innerHTML = `${this.city}`;
+      document.querySelector("#current_country").innerHTML = `${this.country}`;
+    }
+    _initListeners() {
+      const currentDateBtn = document.querySelector(".current--date");
+      let from,
+        to = this.index;
+      currentDateBtn.addEventListener("click", () => {
+        const nav = new CurrentMenu(this.directory, this.index);
+        if (document.querySelector(".current--date-menu") === null) {
+          let weeklyIndex = nav.getIndexList(from, to, nav.getIndexList());
+          nav.open(weeklyIndex);
+          const navDays = document.querySelectorAll(".current--date-menu > p");
+          for (let i = 0; i < navDays.length; i++) {
+            navDays[i].addEventListener("click", () => {
+              from = to;
+              nav.close();
+              const day = new Current(nav.directory, weeklyIndex[i], cityMain);
+              to = weeklyIndex[i];
+              day.relativeDay();
+              day.fill();
+              document.querySelector(".hourly").replaceChildren();
+              if (weeklyIndex[i] == 0) {
+                for (let i = 1; i < 7; i++) {
+                  const forecast = new HourForecast(
+                    data.list[i].dt_txt,
+                    data.list[i].weather[0].id,
+                    data.list[i].main.temp
+                  );
+                  forecast.deploy();
+                }
+              } else {
+                for (let j = weeklyIndex[i] - 4; j < weeklyIndex[i] + 4; j++) {
+                  const forecast = new HourForecast(
+                    data.list[j].dt_txt,
+                    data.list[j].weather[0].id,
+                    data.list[j].main.temp
+                  );
+                  forecast.deploy();
+                }
+              }
+            });
+          }
+        } else {
+          nav.close();
+        }
+      });
+    }
+  }
+  
+  class CurrentMenu {
+    constructor(directory, index) {
+      this.directory = directory;
+      this.index = index;
+    }
+    getIndexList(from, to, indexList) {
+      if (from !== undefined && to !== undefined && indexList !== undefined) {
+        indexList.unshift(0);
+        let iLto = indexList.indexOf(to);
+        indexList.splice(iLto, 1);
+        return indexList;
+      } else {
+        let dayIndexList = [];
+        for (let i = 1, dayIndex; i < 5; i++) {
+          if (i == 1) {
+            dayIndex = secondDayMidday(this.directory, 0);
+            dayIndexList.push(dayIndex);
+          } else {
+            dayIndex += 8;
+            dayIndexList.push(dayIndex);
+          }
+        }
+        return dayIndexList;
+      }
+    }
+  
+    open(dayIndexList) {
+      const nav = makeEl(
+        "nav",
+        document.querySelector(".current"),
+        [["classList", "current--date-menu"]],
+        document.querySelector(".current--conditions")
+      );
+      let dayOfWeek;
+      for (let dayIndex of dayIndexList) {
+        if (dayIndex == 0) {
+          dayOfWeek = "Today";
+        } else if (dayIndex == secondDayMidday(this.directory, 0)) {
+          dayOfWeek = "Tomorrow";
+        } else {
+          dayOfWeek = new Intl.DateTimeFormat("en-US", {
+            weekday: "long",
+          }).format(new Date(this.directory[dayIndex].dt_txt).getTime());
+        }
+        makeEl("p", nav, [["innerHTML", `${dayOfWeek}`]]);
+      }
+      document.querySelector(".current--date--arrow").style.backgroundImage =
+        "url(src/assets/icons/Fleche-up.svg)";
+    }
+    close() {
+      document.querySelector(".current--date-menu").remove();
+      document.querySelector(".current--date--arrow").style.backgroundImage =
+        "url(src/assets/icons/Fleche.svg)";
+    }
+  }
+  
+  class HourForecast {
+    constructor(time, weather, temp) {
+      this.time = new Date(time).getHours();
+      this.weather = getWeather(weather);
+      this.temp = Math.round(temp);
+    }
+  
+    deploy() {
+      const wrapper = makeEl("div", document.querySelector(".hourly"));
+      makeEl("p", wrapper, [["innerHTML", `${this.time}H`]]);
+      makeEl("div", wrapper, [["classList", `hourly--icon ${this.weather}`]]);
+      makeEl("p", wrapper, [["innerHTML", `${this.temp}°`]]);
+    }
+  }
+
+  new Intl.DisplayNames(['en'], { type: 'region' }).of(`${this.data[i].country}`);
+
+  /**
+ * basicClone("#templateId");
+ * @param {string} templateId
+ * @returns
+ */
+function basicClone(templateId) {
+  const template = document.querySelector(templateId);
+  const clone = document.importNode(template.content, true);
+  return clone;
+}
+/**
+ * makeEmptyEL("type",[".class","#id"], [parent, placeBefore]);
+ * @param {string} type
+ * @param {array} classId
+ * @param {array} parentBefore
+ */
+function makeEmptyEl(type, classId, parentBefore) {
+  const el = document.createElement(type);
+  if (classId.constructor === Array && classId !== []) {
+    for (let i = 0; i < classId.length; i++) {
+      if (classId[i].startsWith(".")) {
+        el.classList.add(classId[i].replace(".", ""));
+      } else if (classId[i].startsWith("#")) {
+        el.id = classId[i].replace("#", "");
+      }
+    }
+  }
+  if (parentBefore.constructor === Array) {
+    if (parentBefore.length === 2) {
+      parentBefore[0].insertBefore(el, parentBefore[1]);
+    } else if (parentBefore.length === 1) {
+      parentBefore[0].appendChild(el);
+    }
+  }
+}
+let favList = [
+  { lat: 47.24, long: 6.01, name: "Besançon", temp: 13 },
+  { lat: 48.85, long: 2.34, name: "Paris", temp: 14 },
+  { lat: 45.74, long: 4.84, name: "Lyon", temp: 13 },
+  { lat: 43.29, long: 5.38, name: "Marseille", temp: 17 },
+  { lat: 46.66, long: 4.36, name: "Montceau-les-Mines", temp: 12 },
+];
