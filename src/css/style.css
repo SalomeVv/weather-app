@@ -296,7 +296,7 @@ main {
   background-position: center;
 }
 .main-menu--nav .settings-button {
-  width:34px;
+  width: 34px;
   height: 31px;
 
   background-image: url(../assets/icons/slider.svg);
@@ -322,7 +322,8 @@ main {
   font-size: 28px;
   font-weight: 600;
 }
-.main-menu--list .heart,  .main-menu--list .star {
+.main-menu--list .heart,
+.main-menu--list .star {
   margin: auto 0;
   display: inline-block;
 

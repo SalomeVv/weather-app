@@ -70,6 +70,18 @@ function secondDayMidday(directory, index) {
     return secondDay;
   }
 }
+/**
+ * removes html tag content others and double white space from string
+ * @param {*} data
+ * @returns
+ */
+function filterRawHTML(data) {
+  const htmlTag = /<.*?>|\(<.*>\)|\W*\d*\;|<sup>.*<\/sup>/g;
+  const doubleSpace = /\s\s/g;
+  let textOnly = data.replaceAll(htmlTag, "");
+  textOnly = textOnly.replaceAll(doubleSpace, " ");
+  return textOnly;
+}
 
 let cityMain = {
   lat: 47.24,
@@ -168,8 +180,11 @@ class MainMenu {
 
     const settings = document.querySelector(".main-menu--nav .settings-button");
     settings.addEventListener("click", () => {
-      if (document.querySelector(".main-menu--weather-types") === null) {
+      if (document.querySelector(".main-menu--suggestions")) {
         document.querySelector(".main-menu--suggestions").remove();
+        new citiesByWeather();
+      } else if (document.querySelector(".main-menu--list")) {
+        document.querySelector(".main-menu--list").remove();
         new citiesByWeather();
       }
     });
@@ -372,7 +387,9 @@ class Current {
       ".current--conditions p"
     ).textContent = `${this.temp}°`;
     document.querySelector("#current_city").textContent = `${this.city}`;
-    document.querySelector("#current_country").textContent = `${regionNamesInEnglish.of(this.country)}`;
+    document.querySelector(
+      "#current_country"
+    ).textContent = `${regionNamesInEnglish.of(this.country)}`;
   }
 }
 
@@ -483,14 +500,6 @@ async function geoAPI(input) {
     .then((data) => {
       console.log(data);
       new SearchResults(data);
-      // for (let match of data) {
-      // let city = {
-      //   lat: match.lat,
-      //   long: match.lon,
-      //   name: match.name,
-      //   country: match.country,
-      // };
-      // }
     })
     .catch((err) => console.log("Open Weather Geo Request Failed", err));
 }
@@ -528,6 +537,10 @@ async function getData(city) {
         }
       }
 
+      console.log("city before wikiScrapper");
+      console.log(city);
+      new CityBio(city);
+
       const currentDateBtn = document.querySelector(".current--date");
       let from,
         to = current.index;
@@ -562,60 +575,190 @@ async function getData(city) {
 }
 getData(cityMain);
 
-const showMore = document.querySelector(".city-bio--toggle");
-showMore.addEventListener("click", () => {
-  const cityBio = document.querySelector(".city-bio");
-  if (!cityBio.classList.contains("full")) {
-    cityBio.classList.add("full");
-    cityBio.style.position = "fixed";
-    cityBio.style.height = "90vh";
-    document.querySelector(".city-bio--toggle span").textContent = "Show Less";
-
-    makeEl(
-      "p",
-      cityBio,
-      [
-        ["classList", "city-bio--full"],
-        [
-          "textContent",
-          "Capitale de la région historique et culturelle de Franche-Comté, Besançon constitue aujourd'hui un pôle administratif important au sein de la région administrative de Bourgogne-Franche-Comté en accueillant le siège du conseil régional et de la région académique ainsi qu'un certain nombre de directions régionales. Elle est également le siège d'une des quinze provinces ecclésiastiques françaises et de l'une des deux divisions de l'Armée de terre.",
-        ],
-      ],
-      showMore
-    );
-
-    const stats = makeEl(
-      "div",
-      cityBio,
-      [
-        ["classList", "city-bio--full"],
-        ["id", "stats"],
-      ],
-      showMore
-    );
-    makeEl("p", stats, [
-      ["classList", "city-bio--stats"],
-      ["textContent", "Département : Doubs"],
-    ]);
-    makeEl("p", stats, [
-      ["classList", "city-bio--stats"],
-      ["textContent", "Population : 118 258 habitants (2020)"],
-    ]);
-    makeEl("p", stats, [
-      ["classList", "city-bio--stats"],
-      ["textContent", "Superficie : 65,05 km2"],
-    ]);
-    makeEl("p", stats, [
-      ["classList", "city-bio--stats"],
-      ["textContent", "Code postale : 25000"],
-    ]);
-  } else {
-    cityBio.classList.remove("full");
-    cityBio.style.position = "relative";
-    cityBio.style.height = "auto";
-    document.querySelector(".city-bio--toggle span").innerHTML = "Show More";
-    document
-      .querySelectorAll(".city-bio--full")
-      .forEach((element) => element.remove());
+class CityBio {
+  constructor(city) {
+    this.city = city;
+    this.extra1;
+    this.extra2;
+    this.extra3;
+    this.population = "Population : ";
+    this.area = "Area : ";
+    this._create();
+    this.wikiScrapper();
   }
-});
+  _create() {
+    const cityBio = document.querySelector(".city-bio");
+    cityBio.replaceChildren();
+    makeEl("h2", cityBio, [
+      [
+        "textContent",
+        `${this.city.name} - ${regionNamesInEnglish.of(this.city.country)}`,
+      ],
+    ]);
+    makeEl("p", cityBio, [["classList", "min-bio"]]);
+    const button = makeEl("button", cityBio, [
+      ["classList", "city-bio--toggle"],
+    ]);
+    makeEl("span", button, [
+      ["classList", "inner-shadow"],
+      ["textContent", "Show More"],
+    ]);
+
+    button.addEventListener("click", () => {
+      const cityBio = document.querySelector(".city-bio");
+      if (!cityBio.classList.contains("full")) {
+        cityBio.classList.add("full");
+        cityBio.style.position = "fixed";
+        cityBio.style.height = "90vh";
+        const showMore = document.querySelector(".city-bio--toggle");
+        document.querySelector(".city-bio--toggle span").textContent =
+          "Show Less";
+
+        makeEl(
+          "p",
+          cityBio,
+          [
+            ["classList", "city-bio--full"],
+            ["textContent", `${this.extra1}`],
+          ],
+          showMore
+        );
+        makeEl(
+          "p",
+          cityBio,
+          [
+            ["classList", "city-bio--full"],
+            ["textContent", `${this.extra2}`],
+          ],
+          showMore
+        );
+        makeEl(
+          "p",
+          cityBio,
+          [
+            ["classList", "city-bio--full"],
+            ["textContent", `${this.extra3}`],
+          ],
+          showMore
+        );
+
+        // const stats = makeEl(
+        //   "div",
+        //   cityBio,
+        //   [["classList", "city-bio--full"]],
+        //   showMore
+        // );
+        // makeEl("p", stats, [
+        //   ["classList", "city-bio--stats"],
+        //   ["textContent", `${this.population}`],
+        // ]);
+        // makeEl("p", stats, [
+        //   ["classList", "city-bio--stats"],
+        //   ["textContent", `${this.area}`],
+        // ]);
+      } else {
+        cityBio.classList.remove("full");
+        cityBio.style.position = "relative";
+        cityBio.style.height = "auto";
+        document.querySelector(".city-bio--toggle span").innerHTML =
+          "Show More";
+        document
+          .querySelectorAll(".city-bio--full")
+          .forEach((element) => element.remove());
+      }
+    });
+  }
+  async wikiScrapper() {
+    fetch(`src/php/scrapp-wikipedia.php?location=${this.city.name}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const p1 = filterRawHTML(data.paragraph);
+        document.querySelector(".min-bio").textContent = `${p1}`;
+        const p2 = filterRawHTML(data.paragraph2);
+        this.extra1 = `${p2}`;
+        const p3 = filterRawHTML(data.paragraph3);
+        this.extra2 = `${p3}`;
+        const p4 = filterRawHTML(data.paragraph4);
+        this.extra3 = `${p4}`;
+      })
+      .catch((err) => console.log("Wikipedia Scrap Request Failed", err));
+  }
+}
+
+// async function googleScrapper() {
+//   fetch(`src/php/scrapp-google.php?${cityMain.name}`)
+//     .then((response) => response.text())
+//     .then((data) => {
+//       console.log(data);
+//     })
+//     .catch((err) => console.log("Wikipedia Scrap Request Failed", err));
+// }
+// googleScrapper();
+
+// class Wiki {
+//   constructor(data){
+//     this.titleDOM = document.querySelector(".city-bio > h2");
+//     this.title = `${cityMain.name} - ${regionNamesInEnglish.of(cityMain.country)}`;
+
+//   }
+
+// }
+
+// const showMore = document.querySelector(".city-bio--toggle");
+// showMore.addEventListener("click", () => {
+//   const cityBio = document.querySelector(".city-bio");
+//   if (!cityBio.classList.contains("full")) {
+//     cityBio.classList.add("full");
+//     cityBio.style.position = "fixed";
+//     cityBio.style.height = "90vh";
+//     document.querySelector(".city-bio--toggle span").textContent = "Show Less";
+
+//     makeEl(
+//       "p",
+//       cityBio,
+//       [
+//         ["classList", "city-bio--full"],
+//         [
+//           "textContent",
+//           "Capitale de la région historique et culturelle de Franche-Comté, Besançon constitue aujourd'hui un pôle administratif important au sein de la région administrative de Bourgogne-Franche-Comté en accueillant le siège du conseil régional et de la région académique ainsi qu'un certain nombre de directions régionales. Elle est également le siège d'une des quinze provinces ecclésiastiques françaises et de l'une des deux divisions de l'Armée de terre.",
+//         ],
+//       ],
+//       showMore
+//     );
+
+//     const stats = makeEl(
+//       "div",
+//       cityBio,
+//       [
+//         ["classList", "city-bio--full"],
+//         ["id", "stats"],
+//       ],
+//       showMore
+//     );
+//     makeEl("p", stats, [
+//       ["classList", "city-bio--stats"],
+//       ["textContent", "Département : Doubs"],
+//     ]);
+//     makeEl("p", stats, [
+//       ["classList", "city-bio--stats"],
+//       ["textContent", "Population : 118 258 habitants (2020)"],
+//     ]);
+//     makeEl("p", stats, [
+//       ["classList", "city-bio--stats"],
+//       ["textContent", "Superficie : 65,05 km2"],
+//     ]);
+//     makeEl("p", stats, [
+//       ["classList", "city-bio--stats"],
+//       ["textContent", "Code postale : 25000"],
+//     ]);
+//   } else {
+//     cityBio.classList.remove("full");
+//     cityBio.style.position = "relative";
+//     cityBio.style.height = "auto";
+//     document.querySelector(".city-bio--toggle span").innerHTML = "Show More";
+//     document
+//       .querySelectorAll(".city-bio--full")
+//       .forEach((element) => element.remove());
+//   }
+// });
