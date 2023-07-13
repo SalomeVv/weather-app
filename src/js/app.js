@@ -95,13 +95,13 @@ function checkDuplicates(array) {
     array.forEach((element, index) => {
       if (i === index) return null;
       if (element.lat === el.lat && element.long === el.long) {
-        element.count+=1;
+        element.count += el.count;
         array.splice(i, 1);
-        array.unshift(element)
+        array.unshift(element);
         if (i < index) {
           array.splice(index);
         } else {
-          array.splice(index+1,1);
+          array.splice(index + 1, 1);
         }
       }
     });
@@ -337,7 +337,7 @@ class SearchResults {
         cityMain.name = match.name;
         cityMain.country = match.country;
 
-        cityMain.count = 1;
+        cityMain.count = 5;
         favList.push(cityMain);
         try {
           localStorage.setItem("favList", JSON.stringify(favList));
@@ -523,7 +523,6 @@ async function getRandom() {
   fetch("src/js/city.list.json")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       cityMain = {
         lat: Math.fround(data[i].coord.lat),
         long: Math.fround(data[i].coord.lon),
@@ -582,8 +581,6 @@ async function getData(city) {
         }
       }
 
-      console.log("city before wikiScrapper");
-      console.log(city);
       new CityBio(city);
 
       const currentDateBtn = document.querySelector(".current--date");
@@ -665,8 +662,6 @@ class CityBio {
           ],
           showMore
         );
-        console.log("this.extra2 ");
-        console.log(this.extra2);
         if (this.extra2 !== undefined) {
           makeEl(
             "p",
@@ -706,7 +701,6 @@ class CityBio {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        console.log(data.paragraph);
         const p1 = filterRawHTML(data.paragraph);
         document.querySelector(".min-bio").textContent = `${p1}`;
         const p2 = filterRawHTML(data.paragraph2);
