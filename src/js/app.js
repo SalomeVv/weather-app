@@ -71,7 +71,7 @@ function secondDayMidday(directory, index) {
   }
 }
 /**
- * removes html tag content others and double white space from string
+ * removes html tag content and double white space from string
  * @param {*} data
  * @returns
  */
@@ -90,28 +90,65 @@ let cityMain = {
   country: "FR",
 };
 
-let favList = [
-  { lat: 47.24, long: 6.01, name: "Besançon", country: "FR", temp: 13 },
-  { lat: 48.85, long: 2.34, name: "Paris", country: "FR", temp: 14 },
-  { lat: 45.74, long: 4.84, name: "Lyon", country: "FR", temp: 13 },
-  { lat: 43.29, long: 5.38, name: "Marseille", country: "FR", temp: 17 },
-  {
-    lat: 46.66,
-    long: 4.36,
-    name: "Montceau-les-Mines",
-    country: "FR",
-    temp: 12,
-  },
-];
-let miscList = [
-  { lat: 47.63, long: 6.16, name: "Vesoul", country: "FR", temp: 12 },
-  { lat: 47.1, long: 5.5, name: "Dole", country: "FR", temp: 14 },
-  { lat: 46.9, long: 6.35, name: "Pontarlier", country: "FR", temp: 10 },
-  { lat: 47.68, long: 6.49, name: "Lure", country: "FR", temp: 12 },
-  { lat: 47.51, long: 6.8, name: "Montbéliard", country: "FR", temp: 12 },
-];
+function checkDuplicates(array) {
+  array.forEach((el, i) => {
+    array.forEach((element, index) => {
+      if (i === index) return null;
+      if (element.lat === el.lat && element.long === el.long) {
+        element.count+=1;
+        array.splice(i, 1);
+        array.unshift(element)
+        if (i < index) {
+          array.splice(index);
+        } else {
+          array.splice(index+1,1);
+        }
+      }
+    });
+  });
+  array.sort((a, b) => parseInt(b.count) - parseInt(a.count));
+  console.log("sorted list", array);
+}
+
+let favList = [];
+try {
+  if (
+    localStorage.getItem("favList") !== undefined &&
+    localStorage.getItem("favList") !== null
+  ) {
+    let favString = localStorage.getItem("favList");
+    favList = JSON.parse(favString);
+  }
+} catch (e) {
+  console.log("localStorage unavailable");
+}
+checkDuplicates(favList);
 updateList(favList);
-updateList(miscList);
+
+let miscList = [];
+/**
+ * generate 5 cities for suggestions menu and fetches their current temp
+ */
+async function randomCityList() {
+  fetch("src/js/city.list.json")
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < 5; i++) {
+        let j = Math.round(Math.random() * 209578);
+
+        miscList[i] = {
+          lat: Math.fround(data[j].coord.lat),
+          long: Math.fround(data[j].coord.lon),
+          name: data[j].name,
+          country: data[j].country,
+        };
+      }
+      return miscList;
+    })
+    .then((miscList) => updateList(miscList))
+    .catch((err) => console.log("Random City Request Failed", err));
+}
+randomCityList();
 
 function updateList(list) {
   for (let city of list) {
@@ -238,20 +275,30 @@ class Suggestions {
       ["alt", `${icon}`],
     ]);
     title.textContent = `${titleContent}`;
-    for (let city of src) {
-      const wrapper = makeEl("div", list);
-      makeEl("p", wrapper, [["textContent", `${city.name}`]]);
-      makeEl("p", wrapper, [["textContent", `${city.temp}°`]]);
+    for (let i = 0; i < 5; i++) {
+      if (src[i] !== undefined && src[i] !== null) {
+        const wrapper = makeEl("div", list);
+        makeEl("p", wrapper, [["textContent", `${src[i].name}`]]);
+        makeEl("p", wrapper, [["textContent", `${src[i].temp}°`]]);
 
-      wrapper.addEventListener("click", () => {
-        cityMain.lat = city.lat;
-        cityMain.long = city.long;
-        cityMain.name = city.name;
-        cityMain.country = city.country;
+        wrapper.addEventListener("click", () => {
+          cityMain.lat = src[i].lat;
+          cityMain.long = src[i].long;
+          cityMain.name = src[i].name;
+          cityMain.country = src[i].country;
 
-        getData(cityMain);
-        closeMenu();
-      });
+          src[i].count = 1;
+          favList.push(src[i]);
+          try {
+            localStorage.setItem("favList", JSON.stringify(favList));
+          } catch (e) {
+            console.log("localStorage unavailable");
+          }
+
+          getData(cityMain);
+          closeMenu();
+        });
+      }
     }
   }
 }
@@ -289,6 +336,14 @@ class SearchResults {
         cityMain.long = match.lon;
         cityMain.name = match.name;
         cityMain.country = match.country;
+
+        cityMain.count = 1;
+        favList.push(cityMain);
+        try {
+          localStorage.setItem("favList", JSON.stringify(favList));
+        } catch (e) {
+          console.log("localStorage unavailable");
+        }
 
         getData(cityMain);
         closeMenu();
@@ -463,42 +518,12 @@ class HourForecast {
   }
 }
 
-// async function checkCity(input) {
-//   console.log(input);
-// fetch("src/js/city.list.json")
-//   .then((response) => response.json())
-//   .then((data) => {
-//     console.log(data);
-//       for (let i = 0; i < data.length; i++) {
-//         for (let j = 0; j < data[i].length; j++) {
-//           for (let k = 0; k < data[i][j].length; k++) {
-//             if (input.toLowerCase() == data[i][j][k].name.toLowerCase()) {
-//               console.log("data[i][j][k] "+ data[i][j][k]);
-//               let city = {
-//                 lat: Math.fround(data[i][j][k].coord.lat),
-//                 long: Math.fround(data[i][j][k].coord.lon),
-//                 name: data[i][j][k].name,
-//                 country: data[i][j][k].country,
-//               };
-//               console.log("city"+ city);
-//               return city;
-//             } else {
-//               console.log("No match found");
-//             }
-//           }
-//         }
-//       }
-//     })
-//     .catch((err) => console.log(" City List Request Failed", err));
-// }
-
 async function getRandom() {
   let i = Math.round(Math.random() * 209578);
   fetch("src/js/city.list.json")
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      // console.log(data[i]);
       cityMain = {
         lat: Math.fround(data[i].coord.lat),
         long: Math.fround(data[i].coord.lon),
@@ -508,7 +533,7 @@ async function getRandom() {
       return cityMain;
     })
     .then((cityRandom) => getData(cityRandom))
-    .catch((err) => console.log("Random City From List Request Failed", err));
+    .catch((err) => console.log("Get Random City Request Failed", err));
 }
 getRandom();
 
