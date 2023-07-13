@@ -465,10 +465,10 @@ class HourForecast {
 
 // async function checkCity(input) {
 //   console.log(input);
-//   fetch("src/js/city.list.json")
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(data);
+// fetch("src/js/city.list.json")
+//   .then((response) => response.json())
+//   .then((data) => {
+//     console.log(data);
 //       for (let i = 0; i < data.length; i++) {
 //         for (let j = 0; j < data[i].length; j++) {
 //           for (let k = 0; k < data[i][j].length; k++) {
@@ -491,6 +491,26 @@ class HourForecast {
 //     })
 //     .catch((err) => console.log(" City List Request Failed", err));
 // }
+
+async function getRandom() {
+  let i = Math.round(Math.random() * 209578);
+  fetch("src/js/city.list.json")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      // console.log(data[i]);
+      cityMain = {
+        lat: Math.fround(data[i].coord.lat),
+        long: Math.fround(data[i].coord.lon),
+        name: data[i].name,
+        country: data[i].country,
+      };
+      return cityMain;
+    })
+    .then((cityRandom) => getData(cityRandom))
+    .catch((err) => console.log("Random City From List Request Failed", err));
+}
+getRandom();
 
 async function geoAPI(input) {
   fetch(
@@ -573,7 +593,6 @@ async function getData(city) {
     })
     .catch((err) => console.log("Open Weather Forecast Request Failed", err));
 }
-getData(cityMain);
 
 class CityBio {
   constructor(city) {
@@ -662,39 +681,24 @@ class CityBio {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        if (data !== undefined) {
-          const p1 = filterRawHTML(data.paragraph);
-          document.querySelector(".min-bio").textContent = `${p1}`;
-          const p2 = filterRawHTML(data.paragraph2);
-          this.extra1 = `${p2}`;
-          const p3 = filterRawHTML(data.paragraph3);
-          if (p1.length + p2.length + p3.length < 1200) {
-            this.extra2 = `${p3}`;
-            const p4 = filterRawHTML(data.paragraph4);
-            if (p1.length + p2.length + p3.length + p4.length < 1600) {
-              this.extra3 = `${p4}`;
-            }
-          // } else {
-          //   fetch(`src/php/scrapp-wikipedia-fr.php?location=${this.city.name}`)
-          //     .then((response) => response.json())
-          //     .then((data) => {
-          //       console.log(data);
-          //       const p1 = filterRawHTML(data.paragraph);
-          //       document.querySelector(".min-bio").textContent = `${p1}`;
-          //       const p2 = filterRawHTML(data.paragraph2);
-          //       this.extra1 = `${p2}`;
-          //       if (p1.length + p2.length < 1000) {
-          //         const p3 = filterRawHTML(data.paragraph3);
-          //         this.extra2 = `${p3}`;
-          //         if (p1.length + p2.length + p3.length < 1200) {
-          //           const p4 = filterRawHTML(data.paragraph4);
-          //           this.extra3 = `${p4}`;
-          //         }
-          //       }
-          //     });
+        console.log(data.paragraph);
+        const p1 = filterRawHTML(data.paragraph);
+        document.querySelector(".min-bio").textContent = `${p1}`;
+        const p2 = filterRawHTML(data.paragraph2);
+        this.extra1 = `${p2}`;
+        const p3 = filterRawHTML(data.paragraph3);
+        if (p1.length + p2.length + p3.length < 1200) {
+          this.extra2 = `${p3}`;
+          const p4 = filterRawHTML(data.paragraph4);
+          if (p1.length + p2.length + p3.length + p4.length < 1600) {
+            this.extra3 = `${p4}`;
           }
         }
       })
-      .catch((err) => console.log("Wikipedia Scrap Request Failed", err));
+      .catch((err) => {
+        console.log("Wikipedia Scrap Request Failed", err);
+        document.querySelector(".min-bio").textContent = "...";
+        this.extra1 = ":<";
+      });
   }
 }
