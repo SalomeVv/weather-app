@@ -9,7 +9,7 @@ if(!isset($_GET['location'])){
 	$location = $_GET['location'];
 }
 
-$html = file_get_html('https://en.wikipedia.org/wiki/'.$location);
+$html = file_get_html('https://fr.wikipedia.org/wiki/'.$location);
 
 $paragraph = $html->find('#mw-content-text > .mw-parser-output > p',1)->outertext;
 if (is_array($paragraph)) {

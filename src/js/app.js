@@ -581,8 +581,6 @@ class CityBio {
     this.extra1;
     this.extra2;
     this.extra3;
-    this.population = "Population : ";
-    this.area = "Area : ";
     this._create();
     this.wikiScrapper();
   }
@@ -623,39 +621,30 @@ class CityBio {
           ],
           showMore
         );
-        makeEl(
-          "p",
-          cityBio,
-          [
-            ["classList", "city-bio--full"],
-            ["textContent", `${this.extra2}`],
-          ],
-          showMore
-        );
-        makeEl(
-          "p",
-          cityBio,
-          [
-            ["classList", "city-bio--full"],
-            ["textContent", `${this.extra3}`],
-          ],
-          showMore
-        );
-
-        // const stats = makeEl(
-        //   "div",
-        //   cityBio,
-        //   [["classList", "city-bio--full"]],
-        //   showMore
-        // );
-        // makeEl("p", stats, [
-        //   ["classList", "city-bio--stats"],
-        //   ["textContent", `${this.population}`],
-        // ]);
-        // makeEl("p", stats, [
-        //   ["classList", "city-bio--stats"],
-        //   ["textContent", `${this.area}`],
-        // ]);
+        console.log("this.extra2 ");
+        console.log(this.extra2);
+        if (this.extra2 !== undefined) {
+          makeEl(
+            "p",
+            cityBio,
+            [
+              ["classList", "city-bio--full"],
+              ["textContent", `${this.extra2}`],
+            ],
+            showMore
+          );
+        }
+        if (this.extra3 !== undefined) {
+          makeEl(
+            "p",
+            cityBio,
+            [
+              ["classList", "city-bio--full"],
+              ["textContent", `${this.extra3}`],
+            ],
+            showMore
+          );
+        }
       } else {
         cityBio.classList.remove("full");
         cityBio.style.position = "relative";
@@ -673,92 +662,39 @@ class CityBio {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        const p1 = filterRawHTML(data.paragraph);
-        document.querySelector(".min-bio").textContent = `${p1}`;
-        const p2 = filterRawHTML(data.paragraph2);
-        this.extra1 = `${p2}`;
-        const p3 = filterRawHTML(data.paragraph3);
-        this.extra2 = `${p3}`;
-        const p4 = filterRawHTML(data.paragraph4);
-        this.extra3 = `${p4}`;
+        if (data !== undefined) {
+          const p1 = filterRawHTML(data.paragraph);
+          document.querySelector(".min-bio").textContent = `${p1}`;
+          const p2 = filterRawHTML(data.paragraph2);
+          this.extra1 = `${p2}`;
+          const p3 = filterRawHTML(data.paragraph3);
+          if (p1.length + p2.length + p3.length < 1200) {
+            this.extra2 = `${p3}`;
+            const p4 = filterRawHTML(data.paragraph4);
+            if (p1.length + p2.length + p3.length + p4.length < 1600) {
+              this.extra3 = `${p4}`;
+            }
+          // } else {
+          //   fetch(`src/php/scrapp-wikipedia-fr.php?location=${this.city.name}`)
+          //     .then((response) => response.json())
+          //     .then((data) => {
+          //       console.log(data);
+          //       const p1 = filterRawHTML(data.paragraph);
+          //       document.querySelector(".min-bio").textContent = `${p1}`;
+          //       const p2 = filterRawHTML(data.paragraph2);
+          //       this.extra1 = `${p2}`;
+          //       if (p1.length + p2.length < 1000) {
+          //         const p3 = filterRawHTML(data.paragraph3);
+          //         this.extra2 = `${p3}`;
+          //         if (p1.length + p2.length + p3.length < 1200) {
+          //           const p4 = filterRawHTML(data.paragraph4);
+          //           this.extra3 = `${p4}`;
+          //         }
+          //       }
+          //     });
+          }
+        }
       })
       .catch((err) => console.log("Wikipedia Scrap Request Failed", err));
   }
 }
-
-// async function googleScrapper() {
-//   fetch(`src/php/scrapp-google.php?${cityMain.name}`)
-//     .then((response) => response.text())
-//     .then((data) => {
-//       console.log(data);
-//     })
-//     .catch((err) => console.log("Wikipedia Scrap Request Failed", err));
-// }
-// googleScrapper();
-
-// class Wiki {
-//   constructor(data){
-//     this.titleDOM = document.querySelector(".city-bio > h2");
-//     this.title = `${cityMain.name} - ${regionNamesInEnglish.of(cityMain.country)}`;
-
-//   }
-
-// }
-
-// const showMore = document.querySelector(".city-bio--toggle");
-// showMore.addEventListener("click", () => {
-//   const cityBio = document.querySelector(".city-bio");
-//   if (!cityBio.classList.contains("full")) {
-//     cityBio.classList.add("full");
-//     cityBio.style.position = "fixed";
-//     cityBio.style.height = "90vh";
-//     document.querySelector(".city-bio--toggle span").textContent = "Show Less";
-
-//     makeEl(
-//       "p",
-//       cityBio,
-//       [
-//         ["classList", "city-bio--full"],
-//         [
-//           "textContent",
-//           "Capitale de la région historique et culturelle de Franche-Comté, Besançon constitue aujourd'hui un pôle administratif important au sein de la région administrative de Bourgogne-Franche-Comté en accueillant le siège du conseil régional et de la région académique ainsi qu'un certain nombre de directions régionales. Elle est également le siège d'une des quinze provinces ecclésiastiques françaises et de l'une des deux divisions de l'Armée de terre.",
-//         ],
-//       ],
-//       showMore
-//     );
-
-//     const stats = makeEl(
-//       "div",
-//       cityBio,
-//       [
-//         ["classList", "city-bio--full"],
-//         ["id", "stats"],
-//       ],
-//       showMore
-//     );
-//     makeEl("p", stats, [
-//       ["classList", "city-bio--stats"],
-//       ["textContent", "Département : Doubs"],
-//     ]);
-//     makeEl("p", stats, [
-//       ["classList", "city-bio--stats"],
-//       ["textContent", "Population : 118 258 habitants (2020)"],
-//     ]);
-//     makeEl("p", stats, [
-//       ["classList", "city-bio--stats"],
-//       ["textContent", "Superficie : 65,05 km2"],
-//     ]);
-//     makeEl("p", stats, [
-//       ["classList", "city-bio--stats"],
-//       ["textContent", "Code postale : 25000"],
-//     ]);
-//   } else {
-//     cityBio.classList.remove("full");
-//     cityBio.style.position = "relative";
-//     cityBio.style.height = "auto";
-//     document.querySelector(".city-bio--toggle span").innerHTML = "Show More";
-//     document
-//       .querySelectorAll(".city-bio--full")
-//       .forEach((element) => element.remove());
-//   }
-// });
