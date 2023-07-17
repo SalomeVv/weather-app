@@ -76,7 +76,7 @@ function secondDayMidday(directory, index) {
  * @returns
  */
 function filterRawHTML(data) {
-  const htmlTag = /<.*?>|\(<.*>\)|\W*\d*\;|<sup>.*<\/sup>/g;
+  const htmlTag = /<.*?>|\(<.*>\)|\W*\d*\;|<sup>.*<\/sup>|\b\d?\b/g;
   const doubleSpace = /\s\s/g;
   let textOnly = data.replaceAll(htmlTag, "");
   textOnly = textOnly.replaceAll(doubleSpace, " ");
@@ -85,27 +85,31 @@ function filterRawHTML(data) {
 
 let cityMain = {
   lat: 47.24,
-  long: 6.01,
+  lon: 6.01,
   name: "Besançon",
   country: "FR",
 };
 
 function checkDuplicates(array) {
-  array.forEach((el, i) => {
-    array.forEach((element, index) => {
-      if (i === index) return null;
-      if (element.lat === el.lat && element.long === el.long) {
-        element.count += el.count;
-        array.splice(i, 1);
-        array.unshift(element);
-        if (i < index) {
-          array.splice(index);
-        } else {
-          array.splice(index + 1, 1);
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < array.length; j++) {
+      if (
+        i !== j &&
+        parseFloat(array[i].lat.toPrecision(3)) ===
+          parseFloat(array[j].lat.toPrecision(3)) &&
+        parseFloat(array[i].lon.toPrecision(3)) ===
+          parseFloat(array[j].lon.toPrecision(3))
+      ) {
+        console.log("i ", i, array[i], "j ", j, array[j]);
+        array[i].count += array[j].count;
+        array.splice(j, 1);
+        if (j < i) {
+          i -= 1;
         }
+        j -= 1;
       }
-    });
-  });
+    }
+  }
   array.sort((a, b) => parseInt(b.count) - parseInt(a.count));
   console.log("sorted list", array);
 }
@@ -138,7 +142,7 @@ async function randomCityList() {
 
         miscList[i] = {
           lat: Math.fround(data[j].coord.lat),
-          long: Math.fround(data[j].coord.lon),
+          lon: Math.fround(data[j].coord.lon),
           name: data[j].name,
           country: data[j].country,
         };
@@ -153,7 +157,7 @@ randomCityList();
 function updateList(list) {
   for (let city of list) {
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.long}&appid=${openWeatherKey}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -283,12 +287,14 @@ class Suggestions {
 
         wrapper.addEventListener("click", () => {
           cityMain.lat = src[i].lat;
-          cityMain.long = src[i].long;
+          cityMain.lon = src[i].lon;
           cityMain.name = src[i].name;
           cityMain.country = src[i].country;
 
           src[i].count = 1;
+          console.log("city from suggestion list EL ", src[i]);
           favList.push(src[i]);
+          console.log("favList suggestions list EL ", favList);
           try {
             localStorage.setItem("favList", JSON.stringify(favList));
           } catch (e) {
@@ -333,12 +339,14 @@ class SearchResults {
 
       wrapper.addEventListener("click", () => {
         cityMain.lat = match.lat;
-        cityMain.long = match.lon;
+        cityMain.lon = match.lon;
         cityMain.name = match.name;
         cityMain.country = match.country;
 
-        cityMain.count = 5;
-        favList.push(cityMain);
+        match.count = 5;
+        console.log("match searchResultEL ", match);
+        favList.push(match);
+        console.log("favList search EL ", favList);
         try {
           localStorage.setItem("favList", JSON.stringify(favList));
         } catch (e) {
@@ -415,23 +423,32 @@ const menu = menuBtn.addEventListener("click", () => {
 });
 
 class Current {
-  constructor(directory, index, city) {
+  constructor(directory, city, index) {
     this.directory = directory;
     this.index = index;
-    this.day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-      new Date(directory[index].dt_txt).getTime()
-    );
-    this.temp = Math.round(directory[index].main.temp);
-    this.weather = getWeather(directory[index].weather[0].id);
+    if (index == null || index == undefined) {
+      this.path = directory;
+      this.day = "Today";
+    } else {
+      this.path = directory[index];
+      this.day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+        new Date(directory[index].dt_txt).getTime()
+      );
+    }
+    this.temp = Math.round(this.path.main.temp);
+    this.weather = getWeather(this.path.weather[0].id);
     this.city = city.name;
     this.country = city.country;
   }
+
   relativeDay() {
-    let tomorrow = secondDayMidday(this.directory, 0);
-    if (this.directory[this.index] == this.directory[0]) {
-      this.day = "Today";
-    } else if (this.directory[this.index] == this.directory[tomorrow]) {
-      this.day = "Tomorrow";
+    if (this.index !== undefined || this.index !== null) {
+      let tomorrow = secondDayMidday(this.directory, 0);
+      if (this.directory[this.index] == this.directory[0]) {
+        this.day = "Today";
+      } else if (this.directory[this.index] == this.directory[tomorrow]) {
+        this.day = "Tomorrow";
+      }
     }
   }
   fill() {
@@ -516,104 +533,6 @@ class HourForecast {
     makeEl("div", wrapper, [["classList", `hourly--icon ${this.weather}`]]);
     makeEl("p", wrapper, [["innerHTML", `${this.temp}°`]]);
   }
-}
-
-async function getRandom() {
-  let i = Math.round(Math.random() * 209578);
-  fetch("src/js/city.list.json")
-    .then((response) => response.json())
-    .then((data) => {
-      cityMain = {
-        lat: Math.fround(data[i].coord.lat),
-        long: Math.fround(data[i].coord.lon),
-        name: data[i].name,
-        country: data[i].country,
-      };
-      return cityMain;
-    })
-    .then((cityRandom) => getData(cityRandom))
-    .catch((err) => console.log("Get Random City Request Failed", err));
-}
-getRandom();
-
-async function geoAPI(input) {
-  fetch(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${openWeatherKey}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      new SearchResults(data);
-    })
-    .catch((err) => console.log("Open Weather Geo Request Failed", err));
-}
-
-// fetch(
-//     `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.long}&appid=${openWeatherKey}&units=metric`
-//   )
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(data);})
-
-async function getData(city) {
-  fetch(
-    `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.long}&appid=${openWeatherKey}&units=metric`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-
-      const current = new Current(data.list, 0, city);
-      current.relativeDay();
-      current.fill();
-
-      function createForecast(start, end) {
-        if (document.querySelector(".hourly")) {
-          document.querySelector(".hourly").replaceChildren();
-        }
-        for (let i = start; i < end; i++) {
-          const forecast = new HourForecast(
-            data.list[i].dt_txt,
-            data.list[i].weather[0].id,
-            data.list[i].main.temp
-          );
-          forecast.deploy();
-        }
-      }
-
-      new CityBio(city);
-
-      const currentDateBtn = document.querySelector(".current--date");
-      let from,
-        to = current.index;
-      currentDateBtn.addEventListener("click", () => {
-        const nav = new CurrentMenu(current.directory, current.index);
-        if (document.querySelector(".current--date-menu") === null) {
-          let weeklyIndex = nav.getIndexList(from, to, nav.getIndexList());
-          nav.open(weeklyIndex);
-          const navDays = document.querySelectorAll(".current--date-menu > p");
-          for (let i = 0; i < navDays.length; i++) {
-            navDays[i].addEventListener("click", () => {
-              from = to;
-              nav.close();
-              const day = new Current(nav.directory, weeklyIndex[i], cityMain);
-              to = weeklyIndex[i];
-              day.relativeDay();
-              day.fill();
-              if (weeklyIndex[i] == 0) {
-                createForecast(1, 7);
-              } else {
-                createForecast(weeklyIndex[i] - 4, weeklyIndex[i] + 4);
-              }
-            });
-          }
-        } else {
-          nav.close();
-        }
-      });
-      createForecast(1, 7);
-    })
-    .catch((err) => console.log("Open Weather Forecast Request Failed", err));
 }
 
 class CityBio {
@@ -720,4 +639,111 @@ class CityBio {
         this.extra1 = ":<";
       });
   }
+}
+
+async function getRandom() {
+  let i = Math.round(Math.random() * 209578);
+  fetch("src/js/city.list.json")
+    .then((response) => response.json())
+    .then((data) => {
+      cityMain = {
+        lat: Math.fround(data[i].coord.lat),
+        lon: Math.fround(data[i].coord.lon),
+        name: data[i].name,
+        country: data[i].country,
+      };
+      return cityMain;
+    })
+    .then((cityRandom) => getData(cityRandom))
+    .catch((err) => console.log("Get Random City Request Failed", err));
+}
+getRandom();
+
+async function geoAPI(input) {
+  fetch(
+    `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${openWeatherKey}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      new SearchResults(data);
+    })
+    .catch((err) => console.log("Open Weather Geo Request Failed", err));
+}
+
+async function getCurrent(city) {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+
+      const current = new Current(data, city);
+      current.fill();
+
+      return current;
+    })
+    .catch((err) => console.log("Open Weather Current Request Failed", err));
+}
+async function getForecast(city) {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+
+      function createForecast(start, end) {
+        if (document.querySelector(".hourly")) {
+          document.querySelector(".hourly").replaceChildren();
+        }
+        for (let i = start; i < end; i++) {
+          const forecast = new HourForecast(
+            data.list[i].dt_txt,
+            data.list[i].weather[0].id,
+            data.list[i].main.temp
+          );
+          forecast.deploy();
+        }
+      }
+
+      const currentDateBtn = document.querySelector(".current--date");
+      let index = 0;
+      let from,
+        to = index;
+      currentDateBtn.addEventListener("click", () => {
+        const nav = new CurrentMenu(data.list, index);
+        if (document.querySelector(".current--date-menu") === null) {
+          let weeklyIndex = nav.getIndexList(from, to, nav.getIndexList());
+          nav.open(weeklyIndex);
+          const navDays = document.querySelectorAll(".current--date-menu > p");
+          for (let i = 0; i < navDays.length; i++) {
+            navDays[i].addEventListener("click", () => {
+              from = to;
+              nav.close();
+              const day = new Current(nav.directory, cityMain, weeklyIndex[i]);
+              to = weeklyIndex[i];
+              day.relativeDay();
+              day.fill();
+              if (weeklyIndex[i] == 0) {
+                createForecast(1, 7);
+              } else {
+                createForecast(weeklyIndex[i] - 4, weeklyIndex[i] + 4);
+              }
+            });
+          }
+        } else {
+          nav.close();
+        }
+      });
+      createForecast(1, 7);
+    })
+    .catch((err) => console.log("Open Weather Forecast Request Failed", err));
+}
+
+async function getData(city) {
+  getCurrent(city);
+  getForecast(city);
+  new CityBio(city);
 }
