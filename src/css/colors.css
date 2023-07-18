@@ -63,5 +63,5 @@
   background-color: var(--text-color);
   background-clip: text;
   -webkit-background-clip: text;
-  text-shadow: 0px 2px 3px var(--text-shadow);
+  text-shadow: 0rem 0.125rem 0.1875rem var(--text-shadow);
 }

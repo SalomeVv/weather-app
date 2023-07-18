@@ -41,24 +41,25 @@ main {
   position: fixed;
   width: 100vw;
   bottom: 0;
-  gap: 9vh;
+  gap: 8vh;
 }
 
 .current {
   z-index: 2;
   width: 75vw;
+  min-height: fit-content;
   background-color: var(--bg-color);
   backdrop-filter: blur(5px);
-  border-radius: 30px;
-  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
-    inset -5px 5px 4px var(--inner-top-right);
+  border-radius: 1.875rem;
+  box-shadow: inset 0.2581rem -0.2581rem 0.2581rem var(--inner-bottom-left),
+    inset -0.3125rem 0.3125rem 0.25rem var(--inner-top-right);
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 20px;
+  gap: 0.625rem;
+  padding: 1.25rem;
 
   font-family: "Montserrat", sans-serif;
 }
@@ -74,15 +75,15 @@ main {
   background-image: url(../assets/icons/Fleche.svg);
   background-repeat: no-repeat;
   background-size: contain;
-  margin-bottom: 2px;
+  margin-bottom: 0.125rem;
   display: inline-block;
-  width: 27px;
-  height: 14px;
-  filter: drop-shadow(inset 0 1px 3px var(--text-shadow));
+  width: 1.6875rem;
+  height: 0.875rem;
+  filter: drop-shadow(inset 0 0.0625rem 0.1875rem var(--text-shadow));
 }
 .current--date-menu {
   position: fixed;
-  top: 55px;
+  top: 3.4375rem;
 
   width: inherit;
   background-color: rgba(162, 162, 162, 0.7);
@@ -90,7 +91,7 @@ main {
 
   display: flex;
   flex-direction: column;
-  padding: 3px 0 3px 0;
+  padding: 0.1875rem 0 0.1875rem 0;
 }
 .current--date-menu::before {
   content: "";
@@ -100,61 +101,62 @@ main {
   border-radius: inherit;
   top: 0;
   left: 0;
-  backdrop-filter: blur(10px);
-  box-shadow: -3px 3px 4px 0px rgba(255, 255, 255, 0.5) inset,
-    3px -3px 4px 0px rgba(0, 0, 0, 0.5) inset;
+  backdrop-filter: blur(0.625rem);
+  box-shadow: -0.1875rem 0.1875rem 0.25rem 0rem rgba(255, 255, 255, 0.5) inset,
+    0.1875rem -0.1875rem 0.25rem 0rem rgba(0, 0, 0, 0.5) inset;
   z-index: -1;
 }
 .current--date-menu p {
   font-family: "Open Sans", sans-serif;
-  font-size: 32px;
-  padding: 11px;
+  font-size: 2rem;
+  padding: 0.6875rem;
 }
 .current--date-menu p:hover {
-  border-top: solid 2px rgb(255, 255, 255, 0.8);
-  border-bottom: solid 2px rgb(255, 255, 255, 0.8);
-  box-shadow: 0px 0px 3px 0px var(--inner-top-right) inset,
-    0px 0px 4px 4px var(--text-shadow) inset;
+  border-top: solid 0.125rem rgb(255, 255, 255, 0.8);
+  border-bottom: solid 0.125rem rgb(255, 255, 255, 0.8);
+  box-shadow: 0rem 0rem 0.1875rem 0rem var(--inner-top-right) inset,
+    0rem 0rem 0.25rem 0.25rem var(--text-shadow) inset;
 }
 .current--date-menu p:first-child:hover {
-  border-radius: 30px 30px 0 0;
+  border-radius: 1.875rem 1.875rem 0 0;
   border-top: none;
 }
 .current--date-menu p:last-child:hover {
-  border-radius: 0 0 30px 30px;
+  border-radius: 0 0 1.875rem 1.875rem;
   border-bottom: none;
 }
 .current--conditions {
   display: flex;
   align-items: center;
-  gap: 13px;
-  font-size: 40px;
+  gap: 0.8125rem;
+  font-size: 2.5rem;
 }
 .current--conditions--icon {
-  width: 104px;
-  height: 88px;
+  width: 6.5rem;
+  height: 5.5rem;
   background-image: var(--weather-icon);
   background-repeat: no-repeat;
   background-position: center;
-  filter: drop-shadow(inset 0 1px 3px var(--text-shadow));
+  filter: drop-shadow(inset 0 0.0625rem 0.1875rem var(--text-shadow));
 }
 .current--place {
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .hourly {
   z-index: 1;
   width: 85vw;
+  min-height: 9.75rem;
   background-color: var(--bg-color);
-  border-radius: 30px;
-  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
-    inset -5px 5px 4px var(--inner-top-right);
+  border-radius: 1.875rem;
+  box-shadow: inset 0.2581rem -0.2581rem 0.2581rem var(--inner-bottom-left),
+    inset -0.3125rem 0.3125rem 0.25rem var(--inner-top-right);
 
   display: flex;
   flex-direction: row;
-  gap: 24px;
-  padding: 24px 20px;
-  overflow: scroll;
+  gap: 1.5rem;
+  padding: 1.5rem 1.25rem;
+  overflow-x: scroll;
 }
 .hourly * {
   padding: 0;
@@ -163,23 +165,23 @@ main {
 .hourly > div {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 0.9375rem;
 
   font-family: "Open Sans", sans-serif;
 }
 .hourly > div > p:first-child {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 .hourly--icon {
-  width: 48px;
-  height: 32px;
+  width: 3rem;
+  height: 2rem;
   background-image: var(--weather-icon);
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
 }
 .hourly > div > p:last-child {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -188,17 +190,17 @@ main {
   min-width: 100%;
   background-color: var(--city-bio-bg);
   backdrop-filter: blur(15px);
-  border-radius: 30px 30px 0 0;
-  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
-    inset -5px 5px 4px rgb(255, 255, 255, 0.7);
+  border-radius: 1.875rem 1.875rem 0 0;
+  box-shadow: inset 0.2581rem -0.2581rem 0.2581rem var(--inner-bottom-left),
+    inset -0.3125rem 0.3125rem 0.25rem rgb(255, 255, 255, 0.7);
   /* margin-top: auto; */
   bottom: 0;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
-  padding: 11px 21px;
+  gap: 0.75rem;
+  padding: 0.6875rem 1.3125rem;
 
   font-family: "Open Sans", sans-serif;
 }
@@ -207,25 +209,25 @@ main {
   margin: 0;
 }
 .city-bio h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 .city-bio p {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .city-bio > :nth-child(2) {
-  height: 14vh;
+  min-height: 10vh;
+  max-height: 14vh;
   overflow: hidden;
 }
 .city-bio.full > :nth-child(2) {
-  height: auto;
-  overflow: auto;
+  max-height: fit-content;
 }
 .city-bio .city-bio--stats {
-  margin: 14px 0;
+  margin: 0.875rem 0;
 
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   text-align: left;
 }
@@ -234,24 +236,24 @@ main {
   width: fit-content;
   background-color: var(--button-color);
   backdrop-filter: blur(20);
-  border-radius: 19px;
-  box-shadow: inset 4.13px -4.13px 4.13px var(--inner-bottom-left),
-    inset -5px 5px 4px rgb(255, 255, 255, 0.7);
+  border-radius: 1.1875rem;
+  box-shadow: inset 0.2581rem -0.2581rem 0.2581rem var(--inner-bottom-left),
+    inset -0.3125rem 0.3125rem 0.25rem rgb(255, 255, 255, 0.7);
   margin: auto 0 0 0;
-  padding: 7px 54px;
+  padding: 0.4375rem 3.375rem;
 
   font-family: "Monserrat", sans-serif;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 
 .main-menu {
   width: 95.3vw;
   height: 79vh;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   background: rgba(150, 150, 150, 0.5);
-  box-shadow: -3px 3px 4px 0px rgba(255, 255, 255, 0.5) inset,
-    3px -3px 4px 0px rgba(0, 0, 0, 0.5) inset;
+  box-shadow: -0.1875rem 0.1875rem 0.25rem 0rem rgba(255, 255, 255, 0.5) inset,
+    0.1875rem -0.1875rem 0.25rem 0rem rgba(0, 0, 0, 0.5) inset;
   margin: 10.5vh auto;
 
   display: flex;
@@ -262,11 +264,11 @@ main {
 .main-menu--nav {
   display: flex;
   justify-content: space-between;
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem;
 }
 .main-menu--nav .back-button {
-  width: 34px;
-  height: 24.3px;
+  width: 2.125rem;
+  height: 1.5188rem;
 
   background-image: url(../assets/icons/retours.svg);
   background-size: cover;
@@ -276,11 +278,11 @@ main {
 .main-menu--nav--search {
   width: 54vw;
   background-color: var(--inner-bottom-left);
-  border-radius: 10px;
+  border-radius: 0.625rem;
 
   display: flex;
-  padding: 5px;
-  gap: 3px;
+  padding: 0.3125rem;
+  gap: 0.1875rem;
 }
 .main-menu--nav--search * {
   padding: 0;
@@ -291,15 +293,15 @@ main {
   background-color: transparent;
 
   color: var(--text-color);
-  font-size: 14px;
+  font-size: 0.875rem;
   text-align: center;
 }
 .main-menu--nav--search input::placeholder {
   color: rgb(255, 255, 255, 0.8);
 }
 .main-menu--nav--search .submit-button {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
 
   background-image: url(../assets/icons/search-icon.svg);
   background-size: cover;
@@ -307,8 +309,8 @@ main {
   background-position: center;
 }
 .main-menu--nav .settings-button {
-  width: 34px;
-  height: 31px;
+  width: 2.125rem;
+  height: 1.9375rem;
 
   background-image: url(../assets/icons/slider.svg);
   background-size: cover;
@@ -317,20 +319,20 @@ main {
 }
 
 .main-menu--list {
-  margin-top: 4px;
+  margin-top: 0.25rem;
 }
 .main-menu--list h2 {
   background-color: rgba(150, 150, 150, 0.7);
-  box-shadow: -3px 0px 4px 0px rgba(255, 255, 255, 0.5) inset,
-    3px 0px 4px 0px rgba(0, 0, 0, 0.5) inset;
+  box-shadow: -0.1875rem 0rem 0.25rem 0rem rgba(255, 255, 255, 0.5) inset,
+    0.1875rem 0rem 0.25rem 0rem rgba(0, 0, 0, 0.5) inset;
   margin: 0;
 
   display: flex;
-  padding: 8px;
-  gap: 8px;
+  padding: 0.5rem;
+  gap: 0.5rem;
 
   font-family: "Montserrat", sans-serif;
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 600;
 }
 .main-menu--list .heart,
@@ -338,8 +340,8 @@ main {
   margin: auto 0;
   display: inline-block;
 
-  width: 22px;
-  height: 22px;
+  width: 1.375rem;
+  height: 1.375rem;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -356,16 +358,16 @@ main {
 }
 .main-menu--list div:hover,
 .city-by-weather:hover {
-  box-shadow: 0px 0px 3px 1px var(--inner-top-right) inset,
-    0px 0px 4px 4px var(--inner-bottom-left) inset;
+  box-shadow: 0rem 0rem 0.1875rem 0.0625rem var(--inner-top-right) inset,
+    0rem 0rem 0.25rem 0.25rem var(--inner-bottom-left) inset;
 }
 .main-menu--list p {
-  margin: 8px 20px;
+  margin: 0.5rem 1.25rem;
   padding: 0;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 .main-menu--list > div > img {
-  margin-right: 20px;
+  margin-right: 1.25rem;
 }
 .main-menu--list div > p:first-child {
   margin-right: auto;
@@ -375,18 +377,18 @@ main {
 }
 
 .main-menu--weather-types nav {
-  margin-bottom: 35px;
+  margin-bottom: 2.1875rem;
 
   display: flex;
   justify-content: center;
 }
 .weather-type {
-  width: 60px;
-  height: 48px;
+  width: 3.75rem;
+  height: 3rem;
   box-sizing: border-box;
-  padding: 4px;
+  padding: 0.25rem;
 
-  border-radius: 5px;
+  border-radius: 0.3125rem;
 
   background-image: var(--weather-icon);
   background-position: center;
@@ -395,20 +397,20 @@ main {
   background-origin: content-box;
 }
 .weather-type:hover {
-  box-shadow: -1px -1px 2px 0px var(--inner-top-right) inset,
-    1px 1px 2px 0px var(--inner-bottom-left) inset;
+  box-shadow: -0.0625rem -0.0625rem 0.125rem 0rem var(--inner-top-right) inset,
+    0.0625rem 0.0625rem 0.125rem 0rem var(--inner-bottom-left) inset;
 }
 .weather-type.selected {
-  box-shadow: -2px -2px 4px 0px rgb(255, 255, 255, 0.6) inset,
-    2px 2px 4px 0px rgb(0, 0, 0, 0.6) inset;
+  box-shadow: -0.125rem -0.125rem 0.25rem 0rem rgb(255, 255, 255, 0.6) inset,
+    0.125rem 0.125rem 0.25rem 0rem rgb(0, 0, 0, 0.6) inset;
 }
 .city-by-weather {
   display: flex;
 }
 .city-by-weather > * {
-  margin: 10.5px 16px;
+  margin: 0.6563rem 1rem;
   padding: 0;
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 .city-by-weather > :first-child {
   margin-right: auto;
@@ -416,8 +418,8 @@ main {
 .city-by-weather > :last-child {
   margin-left: auto;
 
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   background-image: var(--weather-icon);
   background-position: center;
   background-size: contain;
