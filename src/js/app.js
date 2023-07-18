@@ -48,6 +48,8 @@ function getWeather(weatherId) {
     return "p-cloudy";
   } else if (weatherId == 803 || weatherId == 804) {
     return "cloudy";
+  } else {
+    return false;
   }
 }
 /**
@@ -76,20 +78,32 @@ function secondDayMidday(directory, index) {
  * @returns
  */
 function filterRawHTML(data) {
-  const htmlTag = /<.*?>|\(<.*>\)|\W*\d*\;|<sup>.*<\/sup>|\b\d?\b/g;
+  const htmlTag = /<.*?>|\(<.*>\)|\W*\d*\;|<sup>.*<\/sup>|\(.*\)/g;
   const doubleSpace = /\s\s/g;
   let textOnly = data.replaceAll(htmlTag, "");
   textOnly = textOnly.replaceAll(doubleSpace, " ");
   return textOnly;
 }
 
-let cityMain = {
-  lat: 47.24,
-  lon: 6.01,
-  name: "Besançon",
-  country: "FR",
-};
+/**
+ * removes some classes from wikipedia data then filters the raw html string
+ * @param {*} data 
+ * @param {*} parent 
+ */
+function filterWiki(data, parent) {
+  parent.innerHTML = `${data}`;
+  const refs = document.querySelectorAll(".reference");
+  refs.forEach((ref) => ref.remove());
+  const geos = document.querySelectorAll(".geo-inline .geo-nondefault");
+  geos.forEach((geo) => geo.remove());
+  let dataM = parent.innerText;
+  parent.innerHTML = `${filterRawHTML(dataM)}`;
+}
 
+/**
+ * removes duplicates from list and moves the element with most instances at the beginning
+ * @param {array} array 
+ */
 function checkDuplicates(array) {
   for (let i = 0; i < array.length; i++) {
     for (let j = 0; j < array.length; j++) {
@@ -113,6 +127,13 @@ function checkDuplicates(array) {
   array.sort((a, b) => parseInt(b.count) - parseInt(a.count));
   console.log("sorted list", array);
 }
+
+let cityMain = {
+  lat: 47.24,
+  lon: 6.01,
+  name: "Besançon",
+  country: "FR",
+};
 
 let favList = [];
 try {
@@ -575,33 +596,28 @@ class CityBio {
         makeEl(
           "p",
           cityBio,
-          [
-            ["classList", "city-bio--full"],
-            ["textContent", `${this.extra1}`],
-          ],
+          [["classList", "city-bio--full extra1"]],
           showMore
         );
+        filterWiki(this.extra1, document.querySelector(".extra1"));
+
         if (this.extra2 !== undefined) {
           makeEl(
             "p",
             cityBio,
-            [
-              ["classList", "city-bio--full"],
-              ["textContent", `${this.extra2}`],
-            ],
+            [["classList", "city-bio--full extra2"]],
             showMore
           );
+          filterWiki(this.extra2, document.querySelector(".extra2"));
         }
         if (this.extra3 !== undefined) {
           makeEl(
             "p",
             cityBio,
-            [
-              ["classList", "city-bio--full"],
-              ["textContent", `${this.extra3}`],
-            ],
+            [["classList", "city-bio--full extra3"]],
             showMore
           );
+          filterWiki(this.extra3, document.querySelector(".extra3"));
         }
       } else {
         cityBio.classList.remove("full");
@@ -620,16 +636,24 @@ class CityBio {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        const p1 = filterRawHTML(data.paragraph);
-        document.querySelector(".min-bio").textContent = `${p1}`;
-        const p2 = filterRawHTML(data.paragraph2);
-        this.extra1 = `${p2}`;
-        const p3 = filterRawHTML(data.paragraph3);
-        if (p1.length + p2.length + p3.length < 1200) {
-          this.extra2 = `${p3}`;
-          const p4 = filterRawHTML(data.paragraph4);
-          if (p1.length + p2.length + p3.length + p4.length < 1600) {
-            this.extra3 = `${p4}`;
+        filterWiki(data.paragraph, document.querySelector(".min-bio"));
+
+        this.extra1 = `${data.paragraph2}`;
+        if (
+          data.paragraph.length +
+            data.paragraph2.length +
+            data.paragraph3.length <
+          1600
+        ) {
+          this.extra2 = `${data.paragraph3}`;
+          if (
+            data.paragraph.length +
+              data.paragraph2.length +
+              data.paragraph3.length +
+              data.paragraph4.length <
+            2000
+          ) {
+            this.extra3 = `${data.paragraph4}`;
           }
         }
       })
@@ -672,7 +696,7 @@ async function geoAPI(input) {
 }
 
 async function getCurrent(city) {
-  fetch(
+  return await fetch(
     `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
   )
     .then((response) => response.json())
@@ -682,11 +706,14 @@ async function getCurrent(city) {
       const current = new Current(data, city);
       current.fill();
 
-      return current;
+      if (getWeather(current.path.weather[0].id) === false) {
+        console.log("weatherID no match");
+        return false;
+      }
     })
     .catch((err) => console.log("Open Weather Current Request Failed", err));
 }
-async function getForecast(city) {
+async function getForecast(city, bool) {
   fetch(
     `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
   )
@@ -706,6 +733,16 @@ async function getForecast(city) {
           );
           forecast.deploy();
         }
+      }
+
+      if (bool !== undefined && bool !== null && bool === false) {
+        let j = -1,
+          weather;
+        do {
+          j++;
+          weather = getWeather(data.list[j].weather[0].id);
+        } while (getWeather(data.list[j].weather[0].id) === false);
+        document.body.classList = `${weather}`;
       }
 
       const currentDateBtn = document.querySelector(".current--date");
@@ -743,7 +780,7 @@ async function getForecast(city) {
 }
 
 async function getData(city) {
-  getCurrent(city);
-  getForecast(city);
+  let current = await getCurrent(city);
+  getForecast(city, current);
   new CityBio(city);
 }
