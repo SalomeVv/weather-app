@@ -149,7 +149,6 @@ class List {
         })
         .catch((err) => console.log("Open Weather Geo Request Failed", err));
     }
-    console.log(this.list);
     return this.list;
   }
 }
@@ -175,7 +174,7 @@ class FavList extends List {
       console.log("localStorage unavailable");
     }
   }
-  //adds an element to the list (+ checkDuplicates and updates) 
+  //adds an element to the list (+ checkDuplicates and updates)
   add(el) {
     if (el.count === undefined) {
       el.count = 1;
@@ -329,7 +328,7 @@ class Suggestions {
     const list = makeEl("div", suggestionsWrapper, [
       ["classList", "main-menu--list"],
     ]);
-    const title = makeEl("div", list, [["classList", "suggestions-title"],]);
+    const title = makeEl("div", list, [["classList", "suggestions-title"]]);
     makeEl("div", title, [
       ["classList", `${icon}`],
       ["alt", `${icon}`],
@@ -571,10 +570,7 @@ class HourForecast {
 class CityBio {
   constructor(city) {
     this.city = city;
-    this.extra1;
-    this.extra2;
-    this.extra3;
-    this._create();
+    this.wiki = [];
     this.wikiScrapper();
   }
   _create() {
@@ -586,7 +582,8 @@ class CityBio {
         `${this.city.name} - ${regionNamesInEnglish.of(this.city.country)}`,
       ],
     ]);
-    makeEl("p", cityBio, [["classList", "min-bio"]]);
+    const min = makeEl("p", cityBio, [["classList", "min-bio"]]);
+    filterWiki(this.wiki[0], min);
     const button = makeEl("button", cityBio, [
       ["classList", "city-bio--toggle"],
     ]);
@@ -605,31 +602,14 @@ class CityBio {
         document.querySelector(".city-bio--toggle span").textContent =
           "Show Less";
 
-        makeEl(
-          "p",
-          cityBio,
-          [["classList", "city-bio--full extra1"]],
-          showMore
-        );
-        filterWiki(this.extra1, document.querySelector(".extra1"));
-
-        if (this.extra2 !== undefined) {
-          makeEl(
+        for (let i = 1; i < this.wiki.length; i++) {
+          const extra = makeEl(
             "p",
             cityBio,
-            [["classList", "city-bio--full extra2"]],
+            [["classList", "city-bio--full"]],
             showMore
           );
-          filterWiki(this.extra2, document.querySelector(".extra2"));
-        }
-        if (this.extra3 !== undefined) {
-          makeEl(
-            "p",
-            cityBio,
-            [["classList", "city-bio--full extra3"]],
-            showMore
-          );
-          filterWiki(this.extra3, document.querySelector(".extra3"));
+          filterWiki(this.wiki[i], extra);
         }
       } else {
         cityBio.classList.remove("full");
@@ -649,31 +629,15 @@ class CityBio {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        filterWiki(data.paragraph, document.querySelector(".min-bio"));
-
-        this.extra1 = `${data.paragraph2}`;
-        if (
-          data.paragraph.length +
-            data.paragraph2.length +
-            data.paragraph3.length <
-          1600
-        ) {
-          this.extra2 = `${data.paragraph3}`;
-          if (
-            data.paragraph.length +
-              data.paragraph2.length +
-              data.paragraph3.length +
-              data.paragraph4.length <
-            2000
-          ) {
-            this.extra3 = `${data.paragraph4}`;
-          }
+        for (let p in data) {
+          this.wiki.push(data[p]);
         }
+        this._create();
       })
       .catch((err) => {
         console.log("Wikipedia Scrap Request Failed", err);
-        document.querySelector(".min-bio").textContent = "...";
-        this.extra1 = ":<";
+        this.wiki = ["...", ":<"];
+        this._create();
       });
   }
 }
@@ -698,7 +662,7 @@ async function getRandom() {
 }
 /**
  * fetches coordinates from city name
- * @param {string} input 
+ * @param {string} input
  */
 async function geoAPI(input) {
   fetch(
@@ -713,8 +677,8 @@ async function geoAPI(input) {
 }
 /**
  * fetches current weather data
- * @param {object} city 
- * @returns 
+ * @param {object} city
+ * @returns
  */
 async function getCurrent(city) {
   return await fetch(
@@ -736,8 +700,8 @@ async function getCurrent(city) {
 }
 /**
  * fetches 5 days weather forecast in 3 hours interval + checks if current weather has css category match
- * @param {object} city 
- * @param {boolean} bool 
+ * @param {object} city
+ * @param {boolean} bool
  */
 async function getForecast(city, bool) {
   fetch(
@@ -807,7 +771,7 @@ async function getForecast(city, bool) {
 
 /**
  * loads the whole page
- * @param {object} city 
+ * @param {object} city
  */
 async function getData(city) {
   menu.fav.add(city);

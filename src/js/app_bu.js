@@ -480,3 +480,33 @@ let favList = [
 //   array.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 //   console.log("sorted list", array);
 // }
+
+
+  // checkSpace(data) {
+  //   let total = 0;
+  //   if (typeof data === Array) {
+  //     data.forEach(() => {
+  //       const temp = makeEl(
+  //         "p",
+  //         document.querySelector(".city-bio", [["style.display", "none"]])
+  //       );
+  //       filterWiki(data, temp);
+  //       let dataM = temp.innerText;
+  //       total += dataM.length;
+  //     });
+  //   } else {
+  //     const temp = makeEl(
+  //       "p",
+  //       document.querySelector(".city-bio", [["style.display", "none"]])
+  //     );
+  //     filterWiki(data, temp);
+  //     let dataM = temp.innerText;
+  //     total += dataM.length;
+  //   }
+
+  //   if (total < 1600) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }

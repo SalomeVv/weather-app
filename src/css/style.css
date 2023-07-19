@@ -222,6 +222,7 @@ main {
   overflow: hidden;
 }
 .city-bio.full > :nth-child(2) {
+  min-height: fit-content;
   max-height: fit-content;
 }
 .city-bio .city-bio--stats {
