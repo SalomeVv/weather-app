@@ -321,7 +321,7 @@ main {
 .main-menu--list {
   margin-top: 0.25rem;
 }
-.main-menu--list h2 {
+.main-menu--list .suggestions-title {
   background-color: rgba(150, 150, 150, 0.7);
   box-shadow: -0.1875rem 0rem 0.25rem 0rem rgba(255, 255, 255, 0.5) inset,
     0.1875rem 0rem 0.25rem 0rem rgba(0, 0, 0, 0.5) inset;
@@ -331,6 +331,9 @@ main {
   padding: 0.5rem;
   gap: 0.5rem;
 
+}
+.main-menu--list h2 {
+  margin: 0;
   font-family: "Montserrat", sans-serif;
   font-size: 1.75rem;
   font-weight: 600;
@@ -338,7 +341,6 @@ main {
 .main-menu--list .heart,
 .main-menu--list .star {
   margin: auto 0;
-  display: inline-block;
 
   width: 1.375rem;
   height: 1.375rem;
@@ -350,7 +352,7 @@ main {
   background-image: url(../assets/icons/coeur.svg);
 }
 .main-menu--list .star {
-  background-image: url(../assets/icons/coeur.svg);
+  background-image: url(../assets/icons/etoile.svg);
 }
 
 .main-menu--list div {

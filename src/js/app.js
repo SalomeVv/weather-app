@@ -1,6 +1,14 @@
 const openWeatherKey = "b9ead5b48dff0a393ee56b4dca49fc47";
 
 const regionNamesInEnglish = new Intl.DisplayNames(["en"], { type: "region" });
+
+let cityMain = {
+  lat: 47.24,
+  lon: 6.01,
+  name: "Besançon",
+  country: "FR",
+};
+
 /**
  * Create an element and add it to the DOM
  * makeEl("type", parent, [["property","value"], ["property","value"], etc];
@@ -53,7 +61,7 @@ function getWeather(weatherId) {
   }
 }
 /**
- * return the index of the next day midday from the date/time at index i
+ * returns the index of the next day midday from the date/time at index i
  * @param {Array} data
  * @param {Integer} index
  * @returns
@@ -87,8 +95,8 @@ function filterRawHTML(data) {
 
 /**
  * removes some classes from wikipedia data then filters the raw html string
- * @param {*} data 
- * @param {*} parent 
+ * @param {*} data
+ * @param {*} parent
  */
 function filterWiki(data, parent) {
   parent.innerHTML = `${data}`;
@@ -100,107 +108,140 @@ function filterWiki(data, parent) {
   parent.innerHTML = `${filterRawHTML(dataM)}`;
 }
 
-/**
- * removes duplicates from list and moves the element with most instances at the beginning
- * @param {array} array 
- */
-function checkDuplicates(array) {
-  for (let i = 0; i < array.length; i++) {
-    for (let j = 0; j < array.length; j++) {
-      if (
-        i !== j &&
-        parseFloat(array[i].lat.toPrecision(3)) ===
-          parseFloat(array[j].lat.toPrecision(3)) &&
-        parseFloat(array[i].lon.toPrecision(3)) ===
-          parseFloat(array[j].lon.toPrecision(3))
-      ) {
-        console.log("i ", i, array[i], "j ", j, array[j]);
-        array[i].count += array[j].count;
-        array.splice(j, 1);
-        if (j < i) {
-          i -= 1;
+class List {
+  constructor() {
+    this.list = [];
+  }
+
+  // removes duplicates from list and moves the element with most instances at the beginning
+  checkDuplicates() {
+    for (let i = 0; i < this.list.length; i++) {
+      for (let j = 0; j < this.list.length; j++) {
+        if (
+          i !== j &&
+          parseFloat(this.list[i].lat.toPrecision(3)) ===
+            parseFloat(this.list[j].lat.toPrecision(3)) &&
+          parseFloat(this.list[i].lon.toPrecision(3)) ===
+            parseFloat(this.list[j].lon.toPrecision(3))
+        ) {
+          console.log("i ", i, this.list[i], "j ", j, this.list[j]);
+          this.list[i].count += this.list[j].count;
+          this.list.splice(j, 1);
+          if (j < i) {
+            i -= 1;
+          }
+          j -= 1;
         }
-        j -= 1;
       }
     }
+    this.list.sort((a, b) => parseInt(b.count) - parseInt(a.count));
+    console.log("sorted list", this.list);
   }
-  array.sort((a, b) => parseInt(b.count) - parseInt(a.count));
-  console.log("sorted list", array);
+  //gets current temp of each list element
+  async update() {
+    for (let city of this.list) {
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          city.temp = Math.round(data.main.temp);
+        })
+        .catch((err) => console.log("Open Weather Geo Request Failed", err));
+    }
+    console.log(this.list);
+    return this.list;
+  }
 }
 
-let cityMain = {
-  lat: 47.24,
-  lon: 6.01,
-  name: "Besançon",
-  country: "FR",
-};
-
-let favList = [];
-try {
-  if (
-    localStorage.getItem("favList") !== undefined &&
-    localStorage.getItem("favList") !== null
-  ) {
-    let favString = localStorage.getItem("favList");
-    favList = JSON.parse(favString);
+class FavList extends List {
+  constructor() {
+    super();
+    this.get();
+    this.checkDuplicates();
+    this.update();
   }
-} catch (e) {
-  console.log("localStorage unavailable");
-}
-checkDuplicates(favList);
-updateList(favList);
-
-let miscList = [];
-/**
- * generate 5 cities for suggestions menu and fetches their current temp
- */
-async function randomCityList() {
-  fetch("src/js/city.list.json")
-    .then((response) => response.json())
-    .then((data) => {
-      for (let i = 0; i < 5; i++) {
-        let j = Math.round(Math.random() * 209578);
-
-        miscList[i] = {
-          lat: Math.fround(data[j].coord.lat),
-          lon: Math.fround(data[j].coord.lon),
-          name: data[j].name,
-          country: data[j].country,
-        };
+  //recuperates favList data from localStorage
+  get() {
+    try {
+      if (
+        localStorage.getItem("favList") !== undefined &&
+        localStorage.getItem("favList") !== null
+      ) {
+        let favString = localStorage.getItem("favList");
+        this.list = JSON.parse(favString);
       }
-      return miscList;
-    })
-    .then((miscList) => updateList(miscList))
-    .catch((err) => console.log("Random City Request Failed", err));
+    } catch (e) {
+      console.log("localStorage unavailable");
+    }
+  }
+  //adds an element to the list (+ checkDuplicates and updates) 
+  add(el) {
+    if (el.count === undefined) {
+      el.count = 1;
+    }
+    let listEl = {
+      lat: el.lat,
+      lon: el.lon,
+      name: el.name,
+      country: el.country,
+      count: el.count,
+    };
+    this.list.push(listEl);
+    try {
+      localStorage.setItem("favList", JSON.stringify(this.list));
+    } catch (e) {
+      console.log("localStorage unavailable");
+    }
+    this.checkDuplicates();
+    this.update();
+  }
 }
-randomCityList();
 
-function updateList(list) {
-  for (let city of list) {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
-    )
+class MiscList extends List {
+  constructor() {
+    super();
+    this.randomCities();
+  }
+  // generates 5 cities from json file and fetches their current temp
+  async randomCities() {
+    fetch("src/js/city.list.json")
       .then((response) => response.json())
       .then((data) => {
-        city.temp = Math.round(data.main.temp);
+        for (let i = 0; i < 5; i++) {
+          let j = Math.round(Math.random() * 209578);
+
+          this.list[i] = {
+            lat: Math.fround(data[j].coord.lat),
+            lon: Math.fround(data[j].coord.lon),
+            name: data[j].name,
+            country: data[j].country,
+          };
+        }
+        return this.list;
       })
-      .catch((err) => console.log("Open Weather Geo Request Failed", err));
+      .then(() => super.update())
+      .catch((err) => console.log("Random City Request Failed", err));
   }
-  console.log(list);
-  return list;
 }
 
 class MainMenu {
   constructor() {
-    this.openMenu();
-    this._initListeners();
+    this.fav = new FavList();
+    this.misc = new MiscList();
   }
-  openMenu() {
+  open() {
     document.querySelector("header").style.display = "none";
     document.querySelector("main").style.display = "none";
-    this._createBaseMenu();
+    this._createBase();
+    this._initListeners();
   }
-  _createBaseMenu() {
+  close() {
+    document.querySelector(".main-menu").remove();
+    document.querySelector("header").style.display = "flex";
+    document.querySelector("main").style.display = "flex";
+  }
+  _createBase() {
     const mainMenu = makeEl("div", document.body, [["classList", "main-menu"]]);
     const nav = makeEl("div", mainMenu, [["classList", "main-menu--nav"]]);
     makeEl("button", nav, [
@@ -224,7 +265,7 @@ class MainMenu {
       ["alt", "settings"],
     ]);
     makeEl("div", mainMenu, [["classList", "main-menu--suggestions"]]);
-    new Suggestions(favList, miscList);
+    new Suggestions(this.fav.list, this.misc.list);
   }
   _initListeners() {
     const backButton = document.querySelector(".main-menu--nav .back-button");
@@ -234,9 +275,9 @@ class MainMenu {
         makeEl("div", document.querySelector(".main-menu"), [
           ["classList", "main-menu--suggestions"],
         ]);
-        new Suggestions(favList, miscList);
+        new Suggestions(this.fav.list, this.misc.list);
       } else {
-        closeMenu();
+        this.close();
       }
     });
 
@@ -261,12 +302,6 @@ class MainMenu {
       geoAPI(searchInput.value);
     });
   }
-}
-
-function closeMenu() {
-  document.querySelector(".main-menu").remove();
-  document.querySelector("header").style.display = "flex";
-  document.querySelector("main").style.display = "flex";
 }
 
 class Suggestions {
@@ -294,12 +329,12 @@ class Suggestions {
     const list = makeEl("div", suggestionsWrapper, [
       ["classList", "main-menu--list"],
     ]);
-    const title = makeEl("h2", list);
+    const title = makeEl("div", list, [["classList", "suggestions-title"],]);
     makeEl("div", title, [
       ["classList", `${icon}`],
       ["alt", `${icon}`],
     ]);
-    title.textContent = `${titleContent}`;
+    makeEl("h2", title, [["textContent", `${titleContent}`]]);
     for (let i = 0; i < 5; i++) {
       if (src[i] !== undefined && src[i] !== null) {
         const wrapper = makeEl("div", list);
@@ -312,18 +347,10 @@ class Suggestions {
           cityMain.name = src[i].name;
           cityMain.country = src[i].country;
 
-          src[i].count = 1;
-          console.log("city from suggestion list EL ", src[i]);
-          favList.push(src[i]);
-          console.log("favList suggestions list EL ", favList);
-          try {
-            localStorage.setItem("favList", JSON.stringify(favList));
-          } catch (e) {
-            console.log("localStorage unavailable");
-          }
+          cityMain.count = 1;
 
           getData(cityMain);
-          closeMenu();
+          menu.close();
         });
       }
     }
@@ -364,18 +391,10 @@ class SearchResults {
         cityMain.name = match.name;
         cityMain.country = match.country;
 
-        match.count = 5;
-        console.log("match searchResultEL ", match);
-        favList.push(match);
-        console.log("favList search EL ", favList);
-        try {
-          localStorage.setItem("favList", JSON.stringify(favList));
-        } catch (e) {
-          console.log("localStorage unavailable");
-        }
+        cityMain.count = 5;
 
         getData(cityMain);
-        closeMenu();
+        menu.close();
       });
     }
   }
@@ -425,7 +444,6 @@ class citiesByWeather {
     ]);
   }
   createList(list) {
-    console.log(list);
     for (let city of list) {
       const weatherMenu = document.querySelector(".main-menu--weather-types");
       let wrapper = makeEl("div", weatherMenu, [
@@ -436,12 +454,6 @@ class citiesByWeather {
     }
   }
 }
-
-const menuBtn = document.getElementById("menu");
-const menu = menuBtn.addEventListener("click", () => {
-  let mainMenu = new MainMenu();
-  return mainMenu;
-});
 
 class Current {
   constructor(directory, city, index) {
@@ -631,6 +643,7 @@ class CityBio {
       }
     });
   }
+  //gets first few wikipedia paragraphs of city page
   async wikiScrapper() {
     fetch(`src/php/scrapp-wikipedia.php?location=${this.city.name}`)
       .then((response) => response.json())
@@ -664,7 +677,9 @@ class CityBio {
       });
   }
 }
-
+/**
+ * fetches random city from json list and loads the page
+ */
 async function getRandom() {
   let i = Math.round(Math.random() * 209578);
   fetch("src/js/city.list.json")
@@ -681,8 +696,10 @@ async function getRandom() {
     .then((cityRandom) => getData(cityRandom))
     .catch((err) => console.log("Get Random City Request Failed", err));
 }
-getRandom();
-
+/**
+ * fetches coordinates from city name
+ * @param {string} input 
+ */
 async function geoAPI(input) {
   fetch(
     `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${openWeatherKey}`
@@ -694,7 +711,11 @@ async function geoAPI(input) {
     })
     .catch((err) => console.log("Open Weather Geo Request Failed", err));
 }
-
+/**
+ * fetches current weather data
+ * @param {object} city 
+ * @returns 
+ */
 async function getCurrent(city) {
   return await fetch(
     `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
@@ -713,6 +734,11 @@ async function getCurrent(city) {
     })
     .catch((err) => console.log("Open Weather Current Request Failed", err));
 }
+/**
+ * fetches 5 days weather forecast in 3 hours interval + checks if current weather has css category match
+ * @param {object} city 
+ * @param {boolean} bool 
+ */
 async function getForecast(city, bool) {
   fetch(
     `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
@@ -779,8 +805,21 @@ async function getForecast(city, bool) {
     .catch((err) => console.log("Open Weather Forecast Request Failed", err));
 }
 
+/**
+ * loads the whole page
+ * @param {object} city 
+ */
 async function getData(city) {
+  menu.fav.add(city);
   let current = await getCurrent(city);
   getForecast(city, current);
   new CityBio(city);
 }
+
+const menu = new MainMenu();
+const menuBtn = document.getElementById("menu");
+menuBtn.addEventListener("click", () => {
+  menu.open();
+});
+
+getRandom();

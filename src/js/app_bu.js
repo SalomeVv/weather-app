@@ -392,3 +392,91 @@ let favList = [
   { lat: 43.29, long: 5.38, name: "Marseille", temp: 17 },
   { lat: 46.66, long: 4.36, name: "Montceau-les-Mines", temp: 12 },
 ];
+
+// /**
+//  * generate 5 cities for suggestions menu and fetches their current temp
+//  */
+// async function randomCityList() {
+//   fetch("src/js/city.list.json")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       for (let i = 0; i < 5; i++) {
+//         let j = Math.round(Math.random() * 209578);
+
+//         miscList[i] = {
+//           lat: Math.fround(data[j].coord.lat),
+//           lon: Math.fround(data[j].coord.lon),
+//           name: data[j].name,
+//           country: data[j].country,
+//         };
+//       }
+//       return miscList;
+//     })
+//     .then((miscList) => updateList(miscList))
+//     .catch((err) => console.log("Random City Request Failed", err));
+// }
+// randomCityList();
+
+// function updateList(list) {
+//   for (let city of list) {
+//     fetch(
+//       `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${openWeatherKey}&units=metric`
+//     )
+//       .then((response) => response.json())
+//       .then((data) => {
+//         city.temp = Math.round(data.main.temp);
+//       })
+//       .catch((err) => console.log("Open Weather Geo Request Failed", err));
+//   }
+//   console.log(list);
+//   return list;
+// }
+
+
+// function addToFavList(city) {
+//   if (city.count === undefined) {
+//     city.count = 1;
+//   }
+//   let listCity = {
+//     lat: city.lat,
+//     lon: city.lon,
+//     name: city.name,
+//     country: city.country,
+//     count: city.count,
+//   };
+//   console.log("city from suggestion list EL ", listCity);
+//   favList.push(listCity);
+//   console.log("favList suggestions list EL ", favList);
+//   try {
+//     localStorage.setItem("favList", JSON.stringify(favList));
+//   } catch (e) {
+//     console.log("localStorage unavailable");
+//   }
+// }
+// /**
+//  * removes duplicates from list and moves the element with most instances at the beginning
+//  * @param {array} array
+//  */
+// function checkDuplicates(array) {
+//   for (let i = 0; i < array.length; i++) {
+//     for (let j = 0; j < array.length; j++) {
+//       if (
+//         i !== j &&
+//         parseFloat(array[i].lat.toPrecision(3)) ===
+//           parseFloat(array[j].lat.toPrecision(3)) &&
+//         parseFloat(array[i].lon.toPrecision(3)) ===
+//           parseFloat(array[j].lon.toPrecision(3))
+//       ) {
+//         console.log("i ", i, array[i], "j ", j, array[j]);
+//         array[i].count += array[j].count;
+//         array.splice(j, 1);
+//         if (j < i) {
+//           i -= 1;
+//         }
+//         j -= 1;
+//       }
+//     }
+//   }
+//   array.sort((a, b) => parseInt(b.count) - parseInt(a.count));
+//   console.log("sorted list", array);
+// }
