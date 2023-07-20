@@ -101,9 +101,11 @@ function filterRawHTML(data) {
 function filterWiki(data, parent) {
   parent.innerHTML = `${data}`;
   const refs = document.querySelectorAll(".reference");
-  refs.forEach((ref) => ref.remove());
+  refs.forEach((el) => el.remove());
   const geos = document.querySelectorAll(".geo-inline .geo-nondefault");
-  geos.forEach((geo) => geo.remove());
+  geos.forEach((el) => el.remove());
+  const extiw = document.querySelectorAll(".extiw");
+  extiw.forEach((el) => el.remove());
   let dataM = parent.innerText;
   parent.innerHTML = `${filterRawHTML(dataM)}`;
 }

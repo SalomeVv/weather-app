@@ -16,26 +16,28 @@ $i= 1;
 $total = 0;
 
 do {
-    $p = $html->find('#mw-content-text > .mw-parser-output > p',$i)->plaintext;
+    $p = $html->find('#mw-content-text > .mw-parser-output > p',$i)->outertext;
     if (is_array($p)) {
-        $p=$html->find('#mw-content-text > .mw-parser-output > p',$i)[0]->outertext;
+        $p = $html->find('#mw-content-text > .mw-parser-output > p',$i)[0]->outertext;
     }
     elseif($p==1 && $p==null){
-        $paragraph = $html->find('#mw-content-text > .mw-parser-output > p',0)->outertext;
+        $p = $html->find('#mw-content-text > .mw-parser-output > p',0)->outertext;
     }
-    $pNext = $html->find('#mw-content-text > .mw-parser-output > p',$i+1)->plaintext;
+
+    $pNext = $html->find('#mw-content-text > .mw-parser-output > p',$i+1)->outertext;
     if (is_array($pNext)) {
-        $pNext=$html->find('#mw-content-text > .mw-parser-output > p',$i+1)[0]->outertext;}
+        $pNext=$html->find('#mw-content-text > .mw-parser-output > p',$i+1)[0]->outertext;
+    }
 
     if ($i==1) {
-        $total += strlen($p) + strlen($pNext);
+        $total += strlen(strip_tags($p)) + strlen(strip_tags($pNext));
     } else {
-        $total += strlen($pNext);
+        $total += strlen(strip_tags($pNext));
     }
 
     $resultData[] = $p;
     $i++;
-} while ($total < 1500);
+} while ($total < 1600 && $pNext!=null);
 
 $result=json_encode($resultData);
 print_r($result);
