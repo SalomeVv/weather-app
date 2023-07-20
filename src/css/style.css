@@ -322,7 +322,7 @@ main {
 .main-menu--list {
   margin-top: 0.25rem;
 }
-.main-menu--list .suggestions-title {
+.main-menu--list >:first-child {
   background-color: rgba(150, 150, 150, 0.7);
   box-shadow: -0.1875rem 0rem 0.25rem 0rem rgba(255, 255, 255, 0.5) inset,
     0.1875rem 0rem 0.25rem 0rem rgba(0, 0, 0, 0.5) inset;
@@ -331,7 +331,6 @@ main {
   display: flex;
   padding: 0.5rem;
   gap: 0.5rem;
-
 }
 .main-menu--list h2 {
   margin: 0;
@@ -377,6 +376,18 @@ main {
 }
 .main-menu--list div > p:last-child {
   margin-left: auto;
+}
+
+.main-menu .random-button {
+  width: 32px;
+  height: 32px;
+  padding:0;
+  margin: auto auto 16px auto;
+
+  background-image: url("../assets/icons/dice.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .main-menu--weather-types nav {

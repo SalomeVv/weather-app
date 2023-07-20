@@ -267,6 +267,8 @@ class MainMenu {
     ]);
     makeEl("div", mainMenu, [["classList", "main-menu--suggestions"]]);
     new Suggestions(this.fav.list, this.misc.list);
+
+    makeEl("button", mainMenu, [["classList", "random-button"]]);
   }
   _initListeners() {
     const backButton = document.querySelector(".main-menu--nav .back-button");
@@ -277,6 +279,9 @@ class MainMenu {
           ["classList", "main-menu--suggestions"],
         ]);
         new Suggestions(this.fav.list, this.misc.list);
+        makeEl("button", document.querySelector(".main-menu"), [
+          ["classList", "random-button"],
+        ]);
       } else {
         this.close();
       }
@@ -286,11 +291,18 @@ class MainMenu {
     settings.addEventListener("click", () => {
       if (document.querySelector(".main-menu--suggestions")) {
         document.querySelector(".main-menu--suggestions").remove();
-        new citiesByWeather();
-      } else if (document.querySelector(".main-menu--list")) {
-        document.querySelector(".main-menu--list").remove();
+        document.querySelector(".main-menu .random-button").remove();
         new citiesByWeather();
       }
+    });
+
+    const randomButton = document.querySelector(".main-menu .random-button");
+    randomButton.addEventListener("click", () => {
+      this.misc.randomCities();
+      setTimeout(() => {
+        document.querySelector(".main-menu--suggestions").replaceChildren();
+        new Suggestions(this.fav.list, this.misc.list);
+      }, "200");
     });
 
     const searchInput = document.querySelector(".main-menu--nav--search input");
@@ -365,13 +377,12 @@ class SearchResults {
   }
   _createList() {
     const mainMenu = document.querySelector(".main-menu");
-    let mainMenuContent;
     if (document.querySelector(".main-menu--suggestions")) {
-      mainMenuContent = document.querySelector(".main-menu--suggestions");
+      document.querySelector(".main-menu--suggestions").remove();
+      document.querySelector(".main-menu .random-button").remove();
     } else if (document.querySelector(".main-menu--weather-types")) {
-      mainMenuContent = document.querySelector(".main-menu--weather-types");
+      document.querySelector(".main-menu--weather-types").remove();
     }
-    mainMenuContent.remove();
     const resultsWrapper = makeEl("div", mainMenu, [
       ["classList", "main-menu--list"],
     ]);
