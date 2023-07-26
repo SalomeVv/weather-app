@@ -22,16 +22,16 @@ The original project aimed to suggest cities by picking the weather but it requi
 
 
 ### Built With
-![figma](https://img.shields.io/badge/figma-84428d.svg?style=for-the-badge&logo=figma&logoColor=white) 
-![html5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)![css3](https://img.shields.io/badge/CSS3-226a9e?style=for-the-badge&logo=css3&logoColor=white)![javascript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+[![figma](https://img.shields.io/badge/figma-84428d.svg?style=for-the-badge&logo=figma&logoColor=white)]()
+[![html5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()[![css3](https://img.shields.io/badge/CSS3-226a9e?style=for-the-badge&logo=css3&logoColor=white)]()[![javascript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)]()
 
 <br/>
 
-[![OpenWeather](https://img.shields.io/badge/OpenWeather_Api-LINK-E5543D?style=for-the-badge&logo=/src/assets/readMeAssets/openweatherlogo.webp)](https://openweathermap.org/)
+[![OpenWeather](https://img.shields.io/badge/OpenWeather_Api-LINK-E5543D?style=for-the-badge&logo=)](https://openweathermap.org/)
 
 
-![php](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-[![Wikipedia](https://img.shields.io/badge/Wikipedia-LINK-373d92?style=for-the-badge&logo=/src/assets/readMeAssets/openweatherlogo.webp)](https://en.wikipedia.org/wiki/Main_Page)
+[![php](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)]()[![simple html dom](https://img.shields.io/badge/simple_html_dom-LINK-414583?style=for-the-badge&logo=)](https://simplehtmldom.sourceforge.io/docs/1.9/index.html)
+[![Wikipedia](https://img.shields.io/badge/Wikipedia-LINK-1f2464?style=for-the-badge&logo=)](https://en.wikipedia.org/wiki/Main_Page)
 
 
 ## Team
