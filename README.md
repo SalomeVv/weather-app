@@ -16,7 +16,7 @@ The original project aimed to suggest cities by picking the weather but it requi
 - Wikipedia excerpt if availlable
 - Menu to check 4 days forward
 - Searchbar to look a city up
-- Keeps track of and displays the 5 most searched cities
+- Keeps track of and displays the 5 most visited cities
 - 5 random suggested cities that can be randomized again
 
 
