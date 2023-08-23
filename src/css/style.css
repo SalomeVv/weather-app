@@ -46,7 +46,7 @@ main {
 
 .current {
   z-index: 2;
-  width: 75vw;
+  width: min(75vw, 24.375rem);
   min-height: fit-content;
   background-color: var(--bg-color);
   backdrop-filter: blur(5px);
@@ -145,7 +145,7 @@ main {
 
 .hourly {
   z-index: 1;
-  width: 85vw;
+  width: min(85vw, 27.5rem);
   min-height: 9.75rem;
   background-color: var(--bg-color);
   border-radius: 1.875rem;
@@ -157,6 +157,12 @@ main {
   gap: 1.5rem;
   padding: 1.5rem 1.25rem;
   overflow-x: scroll;
+  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hourly::-webkit-scrollbar {
+  display: none;
 }
 .hourly * {
   padding: 0;
@@ -187,7 +193,8 @@ main {
 
 .city-bio {
   z-index: 3;
-  min-width: 100%;
+  /* min-width: 100%; */
+  width: min(100%, 32.5rem);
   background-color: var(--city-bio-bg);
   backdrop-filter: blur(15px);
   border-radius: 1.875rem 1.875rem 0 0;
@@ -247,15 +254,18 @@ main {
   font-size: 1.25rem;
   font-weight: 600;
 }
-
+.main-menu-wrapper {
+  box-sizing: border-box;
+  padding: 10.5vh 0;
+}
 .main-menu {
-  width: 95.3vw;
+  width: min(95.3vw, 26.25rem);
   height: 79vh;
   border-radius: 1.875rem;
   background: rgba(150, 150, 150, 0.5);
   box-shadow: -0.1875rem 0.1875rem 0.25rem 0rem rgba(255, 255, 255, 0.5) inset,
     0.1875rem -0.1875rem 0.25rem 0rem rgba(0, 0, 0, 0.5) inset;
-  margin: 10.5vh auto;
+  margin: 0 auto;
 
   display: flex;
   flex-direction: column;
@@ -277,7 +287,7 @@ main {
   background-position: center;
 }
 .main-menu--nav--search {
-  width: 54vw;
+  width: min(54vw, 270px);
   background-color: var(--inner-bottom-left);
   border-radius: 0.625rem;
 
@@ -308,6 +318,8 @@ main {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+
+  margin-left: auto;
 }
 .main-menu--nav .settings-button {
   width: 2.125rem;

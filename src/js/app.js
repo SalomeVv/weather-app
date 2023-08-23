@@ -238,12 +238,13 @@ class MainMenu {
     this._initListeners();
   }
   close() {
-    document.querySelector(".main-menu").remove();
+    document.querySelector(".main-menu-wrapper").remove();
     document.querySelector("header").style.display = "flex";
     document.querySelector("main").style.display = "flex";
   }
   _createBase() {
-    const mainMenu = makeEl("div", document.body, [["classList", "main-menu"]]);
+    const mainMenuWrapper = makeEl("div", document.body, [["classList", "main-menu-wrapper"]]);
+    const mainMenu = makeEl("div", mainMenuWrapper, [["classList", "main-menu"]]);
     const nav = makeEl("div", mainMenu, [["classList", "main-menu--nav"]]);
     makeEl("button", nav, [
       ["classList", "back-button"],
