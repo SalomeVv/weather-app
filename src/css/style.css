@@ -243,7 +243,6 @@ main {
   align-self: center;
   width: fit-content;
   background-color: var(--button-color);
-  backdrop-filter: blur(20);
   border-radius: 1.1875rem;
   box-shadow: inset 0.2581rem -0.2581rem 0.2581rem var(--inner-bottom-left),
     inset -0.3125rem 0.3125rem 0.25rem rgb(255, 255, 255, 0.7);
