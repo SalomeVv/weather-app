@@ -1,0 +1,2 @@
+const openWeatherKey= "";
+export default openWeatherKey;

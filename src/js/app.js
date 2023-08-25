@@ -1,4 +1,4 @@
-const openWeatherKey = "b9ead5b48dff0a393ee56b4dca49fc47";
+import openWeatherKey from '/src/js/param.js';
 
 const regionNamesInEnglish = new Intl.DisplayNames(["en"], { type: "region" });
 
@@ -349,7 +349,16 @@ class Suggestions {
       ["alt", `${icon}`],
     ]);
     makeEl("h2", title, [["textContent", `${titleContent}`]]);
-    for (let i = 0; i < 5; i++) {
+    let maxDisplay;
+    console.log("window.innerHeight ", window.innerHeight);
+    if (window.innerHeight > 800) {
+      maxDisplay = 5;
+    } else if (window.innerHeight > 700) {
+       maxDisplay = 4;
+    } else {
+      maxDisplay = 3;
+    }
+    for (let i = 0; i < maxDisplay; i++) {
       if (src[i] !== undefined && src[i] !== null) {
         const wrapper = makeEl("div", list);
         makeEl("p", wrapper, [["textContent", `${src[i].name}`]]);

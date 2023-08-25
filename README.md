@@ -49,6 +49,13 @@ Personally using Laragon =>
 ### Installation
 In Laragon, download and unzip or clone the repo in the www folder in the Laragon directory.
 
+The Open Weather API works with an API key so you need to create a free account [here](https://home.openweathermap.org/users/sign_up) and generate a [new key](https://home.openweathermap.org/api_keys). Once the key is activated copy/paste it in the param.js.skel file in 'src/js' 
+```javascript
+const openWeatherKey= "YourKeyHere";
+
+```
+Rename the file param.js.
+
 With pretty url enabled, the app is available locally through your browser at weather-app-main.test or whatever-the-name-of-the-folder-in-www-is.test.
 ## License
 
